@@ -13,20 +13,18 @@ const MainPage = (props) => {
           <Switch>
             <Route exact path="/">
               <HomePage />
-              {/* <HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} user={user} setUser={setUser}  auth={auth} /> */}
             </Route>
-            <Route exact path="/login">
+            <Route path="/login">
               <LogIn />
-              {/* <LogIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} user={user} setUser={setUser}  auth={auth}/> */}
             </Route>
             <Route exact path="/signup">
-              {/* <SignUp loggedIn={loggedIn} setLoggedIn={setLoggedIn} user={user} setUser={setUser}  auth={auth} /> */}
+              <HomePage />
             </Route>
             <Route exact path="/signout">
-              {/* <SignOut loggedIn={loggedIn} setLoggedIn={setLoggedIn} user={user} setUser={setUser}  auth={auth} /> */}
+              <HomePage />
             </Route>
             <Route exact path="/passitems">
-              {/* <PassItems loggedIn={loggedIn} setLoggedIn={setLoggedIn} user={user} setUser={setUser}  auth={auth} /> */}
+              <HomePage />
             </Route> 
           </Switch>
         </BrowserRouter> 
