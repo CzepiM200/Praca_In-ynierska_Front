@@ -1,0 +1,50 @@
+@import "../../../scss/general";
+
+.profile {
+  width: 25em;
+  background-color: $background-color-trans;
+  border-radius: 0.5em;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  &__main {
+    padding: 0.4em 0;
+    margin-bottom: 1em;
+    h3 {
+      margin: 0.8em 0;
+      font-size: 1.6em;
+      font-weight: 700;
+    }
+    &_items {
+      display: flex;
+      justify-content: space-evenly;
+      h4 {
+        margin: 0;
+        font-weight: 300;
+      }
+      p {
+        margin: 0.3em 0;
+        font-size: 1.4em;
+      }
+    }
+    &_item {
+      padding: 0.4em 1em 0 1em;
+      background-color: $background-color-trans;
+      border-radius: 0.5em;
+    }
+  }
+  &__line {
+    width: 100%;
+    border-top: 1px solid black;
+  }
+  &__recent {
+    &_items {
+      padding-bottom: 1em;
+    }
+    &_item {
+      margin: 0.4em 0.6em 0.4em 0.6em;
+      padding: 0.2em 0.4em 0.2em 0.4em;
+      background-color: $background-color-trans;
+      border-radius: 0.5em;
+    }
+  }
+}
