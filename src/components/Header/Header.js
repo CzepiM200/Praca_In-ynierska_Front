@@ -31,7 +31,7 @@ const Header = (props) => {
             <div className="header__nav-item">STRAVA</div>
           </Link>
           <Link to="/">
-            <div className="header__nav-item">Pomoc</div>
+            <div className="header__nav-item">Profil</div>
           </Link>
         </nav>
       </header>
