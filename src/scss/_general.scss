@@ -2,3 +2,11 @@
 @import "./general/color";
 @import "./general/fonts";
 @import "./general/size";
+
+.container {
+  margin: 0 auto;
+  padding-top: 10em;
+  height: 100vh;
+  width: 1300px;
+  //background-color: white;
+}
