@@ -1,0 +1,56 @@
+@import "../../../scss/general";
+
+.login-email {
+  background-color: $background-color-trans;
+  border-radius: 0.4em;
+  &__window {
+    &_top {
+    }
+    &_form {
+      margin: 0 auto;
+      margin-top: 2em;
+      margin-bottom: 1em;
+      width: 19em;
+      padding: 2em 3em 2.1em 3em;
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      background-color: $background-color-sec-trans;
+      border-radius: 0.3em;
+      label {
+        margin-bottom: 0.6em;
+        text-align: left;
+        font-weight: bold;
+        font-size: 0.8em;
+      }
+      input {
+        margin-bottom: 1.2em;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid black;
+        outline-width: 0;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    &_buttons {
+      width: 25em;
+      display: flex;
+      justify-content: space-between;
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      p {
+        margin: 1em 1em;
+        padding: 0.7em 1em;
+        background-color: $background-color-trans;
+        border-radius: 0.3em;
+        &.login__login {
+          border: 1px solid black;
+        }
+      }
+    }
+  }
+}

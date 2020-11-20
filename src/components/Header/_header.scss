@@ -1,0 +1,71 @@
+@import "../../scss/general";
+
+.header {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  display: fixed;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 2em 6em 0 0;
+  cursor: default;
+  &__login {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+    color: $light-text-color;
+    a {
+      text-decoration: none;
+      color: $dark-text-color;
+      .signup-link {
+        border: 1px solid $primary-color;
+      }
+      .singout {
+        border: 1px solid transparent;
+        &:hover {
+          border: 1px solid black;
+        }
+      }
+    }
+    &-items {
+      display: flex;
+      align-items: center;
+      .email {
+        color: black;
+      }
+      a {
+        div {
+          margin: 0 0.4em;
+        }
+        .pass-items {
+          color: black;
+          border: 1px solid $primary-color;
+        }
+      }
+    }
+    &-item {
+      cursor: pointer;
+      margin-left: 0.5em;
+      font-size: 0.875em;
+      padding: 0.5em 0.6em;
+    }
+  }
+  &__nav {
+    display: flex;
+    justify-content: flex-end;
+    a {
+      text-decoration: none;
+      color: $dark-text-color;
+    }
+    &-item {
+      cursor: pointer;
+      font-size: 1.125em;
+      padding: 0.4em 0.7em;
+      margin-left: 1em;
+      &:hover {
+        padding: calc(0.4em - 1px) calc(0.7em - 1px);
+        border: 1px solid $outline-color;
+      }
+    }
+  }
+}
