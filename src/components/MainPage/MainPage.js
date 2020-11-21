@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Header from "../Header/Header";
 import HomePage from "../HomePage/HomePage";
 import LogIn from "../LogIn/LogIn";
+import Activity from "../Activity/Activity";
 
 const MainPage = (props) => {
     const { URL } = props;
@@ -20,12 +21,9 @@ const MainPage = (props) => {
             <Route exact path="/signup">
               {/* <HomePage /> */}
             </Route>
-            <Route exact path="/signout">
-              {/* <HomePage /> */}
+            <Route path="/activity">
+              <Activity />
             </Route>
-            <Route exact path="/passitems">
-              {/* <HomePage /> */}
-            </Route> 
           </Switch>
         </BrowserRouter> 
       </section>
