@@ -4,6 +4,7 @@ import { ReactComponent as Add } from '../../../images/svg/plus.svg';
 import { ReactComponent as List } from '../../../images/svg/list.svg';
 import { ReactComponent as Plan } from '../../../images/svg/plan.svg';
 import { ReactComponent as Sync } from '../../../images/svg/sync.svg';
+import { ReactComponent as Check } from '../../../images/svg/check.svg';
 import { ReactComponent as Clipboard } from '../../../images/svg/clipboard.svg';
 //import { ReactComponent as DecorationIcon } from "../../images/svg/Decoration.svg";
 import { BrowserRouter, Switch, Route, Link  } from "react-router-dom";
@@ -37,7 +38,7 @@ const HomePageMenu = (props) => {
             </Link> 
             <Link to="/plan/done">
                 <p className="home-page-menu__item">Zrealizowane plany</p>
-                <Add/>
+                <Check/>
             </Link> 
         </article>
       </section>
