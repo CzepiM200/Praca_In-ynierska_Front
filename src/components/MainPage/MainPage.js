@@ -18,13 +18,13 @@ const MainPage = (props) => {
               <LogIn />
             </Route>
             <Route exact path="/signup">
-              <HomePage />
+              {/* <HomePage /> */}
             </Route>
             <Route exact path="/signout">
-              <HomePage />
+              {/* <HomePage /> */}
             </Route>
             <Route exact path="/passitems">
-              <HomePage />
+              {/* <HomePage /> */}
             </Route> 
           </Switch>
         </BrowserRouter> 
