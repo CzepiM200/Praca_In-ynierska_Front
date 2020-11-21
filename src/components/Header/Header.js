@@ -18,19 +18,19 @@ const Header = (props) => {
         </Link>
         </div>
         <nav className="header__nav">
-          <Link to="/">
+          <Link to="/activity">
             <div className="header__nav-item">Aktywności</div>
           </Link>
-          <Link to="/">
+          <Link to="/plans">
             <div className="header__nav-item">Plany</div>
           </Link>
-          <Link to={{ pathname: "/", hash: "#about" }}>
+          <Link to="/places">
             <div className="header__nav-item">Miejsca</div>
           </Link>
-          <Link to="/">
+          <Link to="/strava">
             <div className="header__nav-item">STRAVA</div>
           </Link>
-          <Link to="/">
+          <Link to="/profile">
             <div className="header__nav-item">Profil</div>
           </Link>
         </nav>
