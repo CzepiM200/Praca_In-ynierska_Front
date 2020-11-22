@@ -5,6 +5,7 @@ import Header from "../Header/Header";
 import HomePage from "../HomePage/HomePage";
 import LogIn from "../LogIn/LogIn";
 import Activity from "../Activity/Activity";
+import Place from "../Place/Place";
 
 const MainPage = (props) => {
     const { URL } = props;
@@ -23,6 +24,9 @@ const MainPage = (props) => {
             </Route>
             <Route path="/activity">
               <Activity />
+            </Route>
+            <Route path="/places">
+              <Place />
             </Route>
           </Switch>
         </BrowserRouter> 
