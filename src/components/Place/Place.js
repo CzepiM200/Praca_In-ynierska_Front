@@ -4,113 +4,79 @@ import { Link, Route } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Place = (props) => {
-  const acitivityList = [
+  const regionsList = [
       {
-          type: "Chodzenie po górach",
-          time: "6h 1min",
-          distance: "21,6km",
-          place: "Mały Kozi",
-          region: "Tatry"
+          name: "Sokoliki",
+          places: ["Tępa i Ptak", "Płetwa", "Baba"],
       },
       {
-          type: "Wspinaczka",
-          time: "18min",
-          distance: "17km",
-          place: "Tępa i Ptak",
-          region: "Sokoliki"
-      },
-      {
-          type: "Wspinaczka",
-          time: "23min",
-          distance: "20m",
-          place: "Płetwa",
-          region: "Sokoliki"
-      },
-      {
-          type: "Chodzenie po górach",
-          time: "1h 1min",
-          distance: "19,8km",
-          place: "Kasprowy",
-          region: "Tatry"
-      },
-      {
-          type: "Wspinaczka",
-          time: "26min",
-          distance: "17m",
-          place: "Baba",
-          region: "Sokoliki"
+          name: "Tatry",
+          places: ["Mały Kozi", "Kasprowy", "Granaty"],
       },
   ];
 
-  const setActivityList = () => {
-    return acitivityList.map((item) => 
-        <div className="activity__window_item">
-            <div className="activity__window_item-top">
-            <p><span>Typ:</span> {item.type}</p>
+  const setPlacesList = () => {
+    return regionsList.map((region) => 
+        <div className="place__window_item">
+           <div className="place__window_item-top">
+            <p><span>Nazwa regionu:</span> {region.name}</p>
             </div>
-            <div className="activity__window_line"></div>
-            <div className="activity__window_item-bottom">
-                <div className="activity__window_item-left">
-                    <p><span>Czas:</span> {item.time}</p> 
-                    <p><span>Dystans:</span> {item.distance}</p>
-                </div>
-                <div className="activity__window_item-right">
-                    <p><span>Zdobyty szczyt:</span> {item.place}</p>
-                    <p><span>Region:</span> {item.region}</p>
-                    <p><span></span></p>
-                </div>
-            </div>               
+            <div className="place__window_line"></div>
+            <div className="place__window_item-bottom">
+                <p><span>Lista miejsc:</span></p>
+                {region.places.map((item) => {
+                    return <p>{item}, </p>
+                })}
+            </div>       
         </div>
     );
   }
 
   return (
-    <section className="activity container">
+    <section className="place">
       <Header />
       <Route exact path="/places">
-        <acricle className="activity__window">
-            <div className="activity__window_top">
-                <h2>Lista aktywności</h2>
-                <Link to="/place/add">
+        <acricle className="place__window">
+            <div className="place__window_top">
+                <h2>Lista miejsc</h2>
+                <Link to="/places/add">
                     <p>Dodaj</p>
                 </Link>
             </div>
-            <div className="activity__window_line"></div>
-            <div className="activity__window_items">
-                {setActivityList()}
+            <div className="place__window_line"></div>
+            <div className="place__window_items">
+                {setPlacesList()}
             </div>
         </acricle>
       </Route> 
       <Route exact path="/places/add">
-        <acricle className="activity__window">
-            <h2>Dodaj aktywność</h2>
-            <div className="activity__window_line"></div>
-            <form>
-                <div className="activity__window_form-item">
-                    <label>Typ: </label>
+        <acricle className="place__window">
+            <h2>Dodaj miejsca i regiony</h2>
+            <div className="place__window_line"></div>
+            <form className="place__window_form-region">
+                <h3>Dodawanie regionów</h3>
+                <div className="place__window_form-item">
+                    <label>Nazwa regionu: </label>
                     <input type="text"/>
                 </div>
-                <div className="activity__window_form-item">
-                    <label>Czas: </label>
+                <button className="btn btn-secondary" type="submit">Dodaj region</button>
+            </form>
+            <form className="place__window_form-place" style={{height: "13em"}}>
+                <h3>Dodawanie miejsc</h3>
+                <div className="place__window_form-item">
+                    <label>Nazwa miejsca: </label>
                     <input type="text"/>
                 </div>
-                <div className="activity__window_form-item">
-                    <label>Dystans: </label>
-                    <input type="text"/>
-                </div>
-                <div className="activity__window_form-item">
-                    <label>Miejsce: </label>
-                    <input type="text"/>
-                </div>
-                <div className="activity__window_form-item">
+                <div className="place__window_form-item">
                     <label>Region: </label>
-                    <input type="text"/>
+                    <select class="custom-select">
+                        <option selected="">Wybierz region</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
                 </div>
-                <div className="activity__window_form-item">
-                    <label>Data: </label>
-                    <input type="date"/>
-                </div>
-                <button type="submit">Dodaj</button>
+                <button style={{width: "9em", marginRight: "1em"}} className="btn btn-secondary" type="submit">Dodaj miejsce</button>
             </form>
         </acricle>
       </Route>  
