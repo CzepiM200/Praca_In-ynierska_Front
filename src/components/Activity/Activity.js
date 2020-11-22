@@ -65,7 +65,7 @@ const Activity = (props) => {
   }
 
   return (
-    <section className="activity container">
+    <section className="activity">
       <Header />
       <Route exact path="/activity">
         <acricle className="activity__window">
