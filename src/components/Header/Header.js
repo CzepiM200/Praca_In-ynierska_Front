@@ -18,6 +18,9 @@ const Header = (props) => {
         </Link>
         </div>
         <nav className="header__nav">
+          <Link to="/">
+            <div className="header__nav-item">Strona główna</div>
+          </Link>
           <Link to="/activity">
             <div className="header__nav-item">Aktywności</div>
           </Link>
@@ -29,9 +32,6 @@ const Header = (props) => {
           </Link>
           <Link to="/strava">
             <div className="header__nav-item">STRAVA</div>
-          </Link>
-          <Link to="/profile">
-            <div className="header__nav-item">Profil</div>
           </Link>
         </nav>
       </header>
