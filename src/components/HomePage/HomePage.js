@@ -6,10 +6,10 @@ import Profile from "./Profile/Profile";
 import HomePageMenu from "./HomePageMenu/HomePageMenu";
 
 const HomePage = (props) => {
-  
-  return (
+  const { user } = props;
+  return ( 
     <section className="home-page bg-1">
-        <Header />
+        <Header user={user}/>
       <div className="container home-page__main">
         <Profile />
         <HomePageMenu />

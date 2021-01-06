@@ -4,6 +4,7 @@ import { Link, Route } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Place = (props) => {
+  const { user } = props;
   const regionsList = [
       {
           name: "Sokoliki",

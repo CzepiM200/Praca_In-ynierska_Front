@@ -1,13 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
 import MainPage from './components/MainPage/MainPage';
+import React, { useState } from "react";
 
-const URL = `www.google.pl`;
+const App = () => {
+  const [user, setUser] = useState({id: -1})
 
-function App() {
-  return (
+  return (  
     <div className="App">
-      <MainPage ULR={URL} />
+      <MainPage user={user} setUser={setUser}/>
     </div>
   );
 }

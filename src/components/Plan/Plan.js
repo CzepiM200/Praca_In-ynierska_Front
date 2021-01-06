@@ -4,6 +4,8 @@ import { Link, Route } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Place = (props) => {
+  const { user } = props;
+
   const regionsList = [
       {
           name: "Sokoliki",
@@ -36,7 +38,7 @@ const Place = (props) => {
     <section className="place">
       <Header />
       <Route exact path="/places">
-        <acricle className="place__window">
+        <article className="place__window">
             <div className="place__window_top">
                 <h2>Lista miejsc</h2>
                 <Link to="/places/add">
@@ -47,10 +49,10 @@ const Place = (props) => {
             <div className="place__window_items">
                 {setPlacesList()}
             </div>
-        </acricle>
+        </article>
       </Route> 
       <Route exact path="/places/add">
-        <acricle className="place__window">
+        <article className="place__window">
             <h2>Dodaj miejsca i regiony</h2>
             <div className="place__window_line"></div>
             <form className="place__window_form-region">
@@ -64,7 +66,7 @@ const Place = (props) => {
             <form className="place__window_form-place" style={{height: "13em"}}>
                 <h3>Dodawanie miejsc</h3>
                 <div className="place__window_form-item">
-                    <label>Nazwa miejsca: </label>
+                    <label>Nazwa miejsca: </label> 
                     <input type="text"/>
                 </div>
                 <div className="place__window_form-item">
@@ -78,7 +80,7 @@ const Place = (props) => {
                 </div>
                 <button style={{width: "9em", marginRight: "1em"}} className="btn btn-secondary" type="submit">Dodaj miejsce</button>
             </form>
-        </acricle>
+        </article>
       </Route>  
     </section>
   );

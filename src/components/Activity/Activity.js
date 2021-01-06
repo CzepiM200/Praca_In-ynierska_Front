@@ -1,72 +1,52 @@
 import "./_activity.scss";
-import React, { useContext } from "react";
+import { trainingsRequest } from "../../helpers/ApiRequests"
+import { trainingType } from "../../helpers/ApplicationTypes"
+import React, { useState } from "react";
 import { Link, Route } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Activity = (props) => {
-  const acitivityList = [
-      {
-          type: "Chodzenie po górach",
-          time: "6h 1min",
-          distance: "21,6km",
-          place: "Mały Kozi",
-          region: "Tatry"
-      },
-      {
-          type: "Wspinaczka",
-          time: "18min",
-          distance: "17km",
-          place: "Tępa i Ptak",
-          region: "Sokoliki"
-      },
-      {
-          type: "Wspinaczka",
-          time: "23min",
-          distance: "20m",
-          place: "Płetwa",
-          region: "Sokoliki"
-      },
-      {
-          type: "Chodzenie po górach",
-          time: "1h 1min",
-          distance: "19,8km",
-          place: "Kasprowy",
-          region: "Tatry"
-      },
-      {
-          type: "Wspinaczka",
-          time: "26min",
-          distance: "17m",
-          place: "Baba",
-          region: "Sokoliki"
-      },
-  ];
+  const { user } = props;
+  const [firstLoad, setFirstLoad] = useState(false);
+  const [acitivityList, setAcitivityList] = useState([]);
 
-  const setActivityList = () => {
-    return acitivityList.map((item) => 
-        <div className="activity__window_item">
+  const setActivityListItems = () => {
+    return acitivityList.map((item, index) => 
+        <div className="activity__window_item" key={index}>
             <div className="activity__window_item-top">
-            <p><span>Typ:</span> {item.type}</p>
+            <p><span>Nazwa:</span> {item.trainingName}</p>
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_item-bottom">
                 <div className="activity__window_item-left">
-                    <p><span>Czas:</span> {item.time}</p> 
-                    <p><span>Dystans:</span> {item.distance}</p>
+                    <p><span>Czas:</span> {item.activityTime} s</p> 
+                    <p><span>Dystans:</span> {item.distance} m</p>
+                    <p><span>Rozpoczęty:</span> {item.startTime} s</p> 
+                    <p><span>Zakończony:</span> {item.endTime} s</p> 
                 </div>
                 <div className="activity__window_item-right">
+                    <p><span>Typ:</span> {trainingType(item.trainingType)}</p> 
                     <p><span>Zdobyty szczyt:</span> {item.place}</p>
                     <p><span>Region:</span> {item.region}</p>
-                    <p><span></span></p>
+                    
                 </div>
-            </div>               
+            </div>      
+            <div className="activity__window_line"></div>   
+            <div className="activity__window_item-description">
+                <p>{item.trainingDescription}</p>
+            </div>      
         </div>
     );
   }
 
+  if(!firstLoad) {
+    trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
+    setFirstLoad(true)
+  }
+
   return (
     <section className="activity">
-      <Header />
+      <Header user={user}/>
       <Route exact path="/activity">
         <acricle className="activity__window">
             <div className="activity__window_top">
@@ -77,7 +57,7 @@ const Activity = (props) => {
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_items">
-                {setActivityList()}
+                {setActivityListItems()}
             </div>
         </acricle>
       </Route> 

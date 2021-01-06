@@ -8,25 +8,28 @@ import Activity from "../Activity/Activity";
 import Place from "../Place/Place";
 
 const MainPage = (props) => {
-    const { URL } = props;
+    const {  user, setUser } = props;
     return (
       <section className="main-page">
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
-              <HomePage />
+              <HomePage  user={user} setUser={setUser}/>
             </Route>
             <Route path="/login">
-              <LogIn />
+              <LogIn  user={user} setUser={setUser}/>
             </Route>
             <Route exact path="/signup">
-              {/* <HomePage /> */}
+              {/* <Register />  user={user} setUser={setUser}*/}
+            </Route>
+            <Route exact path="/logout">
+              {/* <Register />  user={user} setUser={setUser}*/}
             </Route>
             <Route path="/activity">
-              <Activity />
+              <Activity  user={user}/>
             </Route>
             <Route path="/places">
-              <Place />
+              <Place  user={user} setUser={setUser}/>
             </Route>
           </Switch>
         </BrowserRouter> 

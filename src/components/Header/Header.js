@@ -1,13 +1,13 @@
 import "./_header.scss";
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const Header = (props) => {
-  
-  return (
-    <section className="header">
-      <header>
-        <div className="header__login">
+  const { user } = props;
+
+  const generateLoggedOutHeaderSection = () => {
+    return (
+      <div className="header__login">
         <Link to="/login">
           <div className="header__login-item">Zaloguj</div>
         </Link>{" "}
@@ -16,11 +16,33 @@ const Header = (props) => {
             Załóż konto
           </div> 
         </Link>
-        </div>
+      </div>
+    );
+  }
+
+  const generateUserHeaderSection = () => {
+    return (
+      <div className="header__login">
+        <Link to="/">
+          <div className="header__login-item"><span>Witaj {user.firstName}!</span></div>
+        </Link>{" "}
+        <Link to="/logout">
+          <div className="header__login-item signup-link">
+            Wyloguj
+          </div> 
+        </Link>
+      </div>
+    );
+  }  
+
+  return (
+    <section className="header">
+      <header>
+        {user.id === -1 ? generateLoggedOutHeaderSection() : generateUserHeaderSection()}
         <nav className="header__nav">
           <Link to="/">
             <div className="header__nav-item">Strona główna</div>
-          </Link>
+          </Link> 
           <Link to="/activity">
             <div className="header__nav-item">Aktywności</div>
           </Link>

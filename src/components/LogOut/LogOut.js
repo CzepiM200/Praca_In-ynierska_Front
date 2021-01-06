@@ -1,13 +1,10 @@
-import "./_logIn.scss";
+import "./_logOut.scss";
 import React, { useState } from "react";
-//import { ReactComponent as DecorationIcon } from "../../images/svg/Decoration.svg";
 import { BrowserRouter, Switch, Route  } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Header from "../Header/Header";
-import LogInEmail from "./LogInEmail/LogInEmail";
-import LogInMethod from "./LogInMethod/LogInMathod";
 
-const LogIn = (props) => {
+const LogOut = (props) => {
   const {  user, setUser } = props;
 
   return (
@@ -18,7 +15,7 @@ const LogIn = (props) => {
             <LogInMethod />
         </Route>
         <Route path="/login/email">
-            <LogInEmail setUser={setUser} user={user}/>
+            <LogInEmail setUser={setUser}/>
         </Route>
             <Route exact path="./google"> 
         </Route>    
@@ -28,4 +25,4 @@ const LogIn = (props) => {
   );
 };
 
-export default LogIn;
+export default LogOut;
