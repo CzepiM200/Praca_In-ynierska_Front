@@ -139,4 +139,10 @@
       }
     }
   }
+  &__place-in-region {
+    padding: 2px;
+    font-size: 1.05em;
+    cursor: pointer;
+    border-bottom: 1px solid $dark-line-color;
+  }
 }

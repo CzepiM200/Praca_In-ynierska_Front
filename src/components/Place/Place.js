@@ -1,41 +1,43 @@
 import "./_place.scss";
-import React, { useContext } from "react";
-import { Link, Route } from "react-router-dom";
+import { regionsRequest } from "../../helpers/ApiRequests"
+import React, { useState } from "react";
+import { Link, Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Place = (props) => {
   const { user } = props;
-  const regionsList = [
-      {
-          name: "Sokoliki",
-          places: ["Tępa i Ptak", "Płetwa", "Baba"],
-      },
-      {
-          name: "Tatry",
-          places: ["Mały Kozi", "Kasprowy", "Granaty"],
-      },
-  ];
+  const [firstLoad, setFirstLoad] = useState(false);
+  const [regionsList, setRegionsList] = useState([]);
+  let history = useHistory();
+
+  if(!firstLoad) {
+    regionsRequest(user, {page: 1, number: 10}, setRegionsList)
+    setFirstLoad(true)
+  }
 
   const setPlacesList = () => {
-    return regionsList.map((region) => 
-        <div className="place__window_item">
+    return regionsList.map((region, index) => 
+        <div className="place__window_item" key={index}>
            <div className="place__window_item-top">
-            <p><span>Nazwa regionu:</span> {region.name}</p>
+            <p><span>Nazwa regionu:</span> {region.regionName}</p>
             </div>
             <div className="place__window_line"></div>
             <div className="place__window_item-bottom">
-                <p><span>Lista miejsc:</span></p>
+                {/* <p><span>Lista miejsc:</span></p> */}
                 {region.places.map((item) => {
-                    return <p>{item}, </p>
+                    return <p className="place__place-in-region">{item.placeName}</p>
                 })}
+                {region.places.length == 0 && <p>Brak dodanych miejsc w regionie...</p>}
             </div>       
         </div>
     );
   }
 
+  if (user.id === -1)
+    history.push("/login")
   return (
     <section className="place">
-      <Header />
+      <Header user={user}/>
       <Route exact path="/places">
         <acricle className="place__window">
             <div className="place__window_top">

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const LogInEmail = (props) => {
-  const { setUser } = props;
+  const { user, setUser } = props;
   let history = useHistory();
 
   const [nick, setNick] = useState("Nati355");
@@ -13,14 +13,17 @@ const LogInEmail = (props) => {
   const [password, setPassword] = useState("Natalia123");
   //const [passwordValidation, setPasswordValidation] = useState(true);
 
-  const handleLogin = (event) => { 
+  const handleLogin = async (event) => { 
     const loginData = {
       UserName: nick,
       Password: password,
     };
-    loginRequest(loginData, setUser) && history.push("/")
+    await loginRequest(loginData, setUser) && history.push("/")
+    console.log("after");
   }
 
+  if (user.id !== -1)
+    history.push("/")
   return (  
     <>
       <article className="login-email">

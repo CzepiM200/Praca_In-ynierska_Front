@@ -1,14 +1,15 @@
 import "./_activity.scss";
 import { trainingsRequest } from "../../helpers/ApiRequests"
-import { trainingType } from "../../helpers/ApplicationTypes"
+import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState } from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Activity = (props) => {
   const { user } = props;
   const [firstLoad, setFirstLoad] = useState(false);
   const [acitivityList, setAcitivityList] = useState([]);
+  let history = useHistory();
 
   const setActivityListItems = () => {
     return acitivityList.map((item, index) => 
@@ -21,14 +22,14 @@ const Activity = (props) => {
                 <div className="activity__window_item-left">
                     <p><span>Czas:</span> {item.activityTime} s</p> 
                     <p><span>Dystans:</span> {item.distance} m</p>
-                    <p><span>Rozpoczęty:</span> {item.startTime} s</p> 
-                    <p><span>Zakończony:</span> {item.endTime} s</p> 
+                    <p><span>Rozpoczęty:</span> {item.startTime}</p> 
+                    <p><span>Zakończony:</span> {item.endTime}</p> 
                 </div>
                 <div className="activity__window_item-right">
                     <p><span>Typ:</span> {trainingType(item.trainingType)}</p> 
-                    <p><span>Zdobyty szczyt:</span> {item.place}</p>
-                    <p><span>Region:</span> {item.region}</p>
-                    
+                    <p><span>Trasa:</span> {item.route.routeName}</p>
+                    <p><span>Skala:</span> {scaleType(item.route.scale)}</p>
+                    <p><span>Wycena:</span> {item.route.rating}</p>
                 </div>
             </div>      
             <div className="activity__window_line"></div>   
@@ -44,11 +45,13 @@ const Activity = (props) => {
     setFirstLoad(true)
   }
 
+  if (user.id === -1)
+    history.push("/login")
   return (
     <section className="activity">
       <Header user={user}/>
       <Route exact path="/activity">
-        <acricle className="activity__window">
+        <article className="activity__window">
             <div className="activity__window_top">
                 <h2>Lista aktywności</h2>
                 <Link to="/activity/add">
@@ -59,10 +62,10 @@ const Activity = (props) => {
             <div className="activity__window_items">
                 {setActivityListItems()}
             </div>
-        </acricle>
+        </article>
       </Route> 
       <Route exact path="/activity/add">
-        <acricle className="activity__window">
+        <article className="activity__window">
             <h2>Dodaj aktywność</h2>
             <div className="activity__window_line"></div>
             <form>
@@ -92,7 +95,7 @@ const Activity = (props) => {
                 </div>
                 <button type="submit">Dodaj</button>
             </form>
-        </acricle>
+        </article>
       </Route>  
     </section>
   );
