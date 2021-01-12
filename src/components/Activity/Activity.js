@@ -1,7 +1,7 @@
 import "./_activity.scss";
 import { trainingsRequest } from "../../helpers/ApiRequests"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
@@ -40,13 +40,16 @@ const Activity = (props) => {
     );
   }
 
-  if(!firstLoad) {
-    trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
-    setFirstLoad(true)
-  }
 
-  if (user.id === -1)
-    history.push("/login")
+  useEffect(() => {
+    if (user.id === -1)
+      history.push("/login")
+    else if(!firstLoad) {
+      trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
+      setFirstLoad(true)
+    }
+  }, [user, firstLoad, history]);
+  
   return (
     <section className="activity">
       <Header user={user}/>
@@ -93,7 +96,12 @@ const Activity = (props) => {
                     <label>Data: </label>
                     <input type="date"/>
                 </div>
-                <button type="submit">Dodaj</button>
+                <button 
+                  style={{width: "9em", marginRight: "1em"}} 
+                  className="btn btn-secondary" 
+                  type="submit">
+                  Dodaj trening
+                </button>
             </form>
         </article>
       </Route>  

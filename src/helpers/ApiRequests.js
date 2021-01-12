@@ -1,10 +1,10 @@
 import axios from "axios"
 
-const baseURL = `https://localhost:44374/api/`
-
+const baseApiURL = `https://localhost:44374/api/`
+const baseURL = `https://localhost:44374/`
 
 // =========
-// User
+// User - email
 // =========
 
 const baseUserURL = baseURL + `users/`
@@ -24,7 +24,7 @@ export const registerRequest = async (callBackFunction, newUserData) => {
 export const loginRequest = async (loginData, callBackFunction) => {
     const config = {
       method: 'post',
-      url: 'https://localhost:44374/users/authenticate',
+      url: baseUserLoginURL,
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -33,7 +33,6 @@ export const loginRequest = async (loginData, callBackFunction) => {
     
     axios(config)
     .then(function (response) {
-      console.log(response.data);
       callBackFunction(response.data);
       return true;
     })
@@ -44,10 +43,38 @@ export const loginRequest = async (loginData, callBackFunction) => {
 }
 
 // =========
+// User - google
+// =========
+
+const baseUserGoogleLoginURL = baseUserURL + `authenticate/google`
+
+export const googleLoginRequest = async (authorizeData, callBackFunction) => {
+  console.log(authorizeData);
+  const config = {
+    method: 'post',
+    url: baseUserGoogleLoginURL,
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    data : JSON.stringify(authorizeData)
+  };
+  
+  axios(config)
+  .then(function (response) {
+    callBackFunction(response.data);
+    return true;
+  })
+  .catch(function (error) {
+    return false;
+  });
+}
+
+// =========
 // Trainings
 // =========
 
-const baseTrainingsURL = baseURL + `activities/`
+
+const baseTrainingsURL = baseApiURL + `activities/`
 
 export const trainingsRequest = async (userData, quantity, callBackFunction) => {
   const config = {
@@ -60,20 +87,18 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
 
   axios(config)
   .then(function (response) {
-    console.log(response.data);
     callBackFunction(response.data);
   })
   .catch(function (error) {
     console.log(error);
   });
-  
 }
 
 // =========
 // Regions
 // =========
 
-const baseSpotURL = baseURL + `regions/`
+const baseSpotURL = baseApiURL + `regions/`
 
 const baseRegionsURL = baseSpotURL + `regions/`
 
@@ -88,7 +113,6 @@ export const regionsRequest = async (userData, quantity, callBackFunction) => {
 
   axios(config)
   .then(function (response) {
-    console.log(response.data);
     callBackFunction(response.data);
   })
   .catch(function (error) {

@@ -1,6 +1,6 @@
 import "./_place.scss";
 import { regionsRequest } from "../../helpers/ApiRequests"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
@@ -10,10 +10,7 @@ const Place = (props) => {
   const [regionsList, setRegionsList] = useState([]);
   let history = useHistory();
 
-  if(!firstLoad) {
-    regionsRequest(user, {page: 1, number: 10}, setRegionsList)
-    setFirstLoad(true)
-  }
+  
 
   const setPlacesList = () => {
     return regionsList.map((region, index) => 
@@ -24,22 +21,29 @@ const Place = (props) => {
             <div className="place__window_line"></div>
             <div className="place__window_item-bottom">
                 {/* <p><span>Lista miejsc:</span></p> */}
-                {region.places.map((item) => {
-                    return <p className="place__place-in-region">{item.placeName}</p>
+                {region.places.map((item, index) => {
+                    return <p className="place__place-in-region" key={index}>{item.placeName}</p>
                 })}
-                {region.places.length == 0 && <p>Brak dodanych miejsc w regionie...</p>}
+                {region.places.length === 0 && <p>Brak dodanych miejsc w regionie...</p>}
             </div>       
         </div>
     );
   }
 
-  if (user.id === -1)
-    history.push("/login")
+  useEffect(() => {
+    if (user.id === -1)
+      history.push("/login")
+    else if(!firstLoad) {
+      regionsRequest(user, {page: 1, number: 10}, setRegionsList)
+      setFirstLoad(true)
+    }
+  }, [user, firstLoad, history]);
+
   return (
     <section className="place">
       <Header user={user}/>
       <Route exact path="/places">
-        <acricle className="place__window">
+        <article className="place__window">
             <div className="place__window_top">
                 <h2>Lista miejsc</h2>
                 <Link to="/places/add">
@@ -50,10 +54,10 @@ const Place = (props) => {
             <div className="place__window_items">
                 {setPlacesList()}
             </div>
-        </acricle>
+        </article>
       </Route> 
       <Route exact path="/places/add">
-        <acricle className="place__window">
+        <article className="place__window">
             <h2>Dodaj miejsca i regiony</h2>
             <div className="place__window_line"></div>
             <form className="place__window_form-region">
@@ -81,7 +85,7 @@ const Place = (props) => {
                 </div>
                 <button style={{width: "9em", marginRight: "1em"}} className="btn btn-secondary" type="submit">Dodaj miejsce</button>
             </form>
-        </acricle>
+        </article>
       </Route>  
     </section>
   );

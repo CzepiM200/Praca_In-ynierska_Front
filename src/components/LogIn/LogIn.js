@@ -7,22 +7,25 @@ import Header from "../Header/Header";
 import LogInEmail from "./LogInEmail/LogInEmail";
 import LogInMethod from "./LogInMethod/LogInMathod";
 
+
 const LogIn = (props) => {
-  const {  user, setUser } = props;
+  const { user, setUser } = props;
+
+  
 
   return (
     <>
       <Header user={user}/>
       <section className="login">
-       <Route exact path="/login">
-            <LogInMethod />
+        <Route exact path="/login">
+           <LogInMethod setUser={setUser} user={user}/>
+           
         </Route>
         <Route path="/login/email">
             <LogInEmail setUser={setUser} user={user}/>
         </Route>
-            <Route exact path="./google"> 
+        <Route exact path="./google"> 
         </Route>    
-        
       </section>
     </>
   );

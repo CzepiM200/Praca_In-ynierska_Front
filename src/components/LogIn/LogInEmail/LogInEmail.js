@@ -1,5 +1,5 @@
 import "./_logInEmail.scss";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginRequest } from "../../../helpers/ApiRequests"
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -19,11 +19,13 @@ const LogInEmail = (props) => {
       Password: password,
     };
     await loginRequest(loginData, setUser) && history.push("/")
-    console.log("after");
   }
 
-  if (user.id !== -1)
-    history.push("/")
+  useEffect(() => {
+    if (user.id !== -1)
+      history.push("/login")
+  }, [user, history]);
+
   return (  
     <>
       <article className="login-email">
