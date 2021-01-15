@@ -94,18 +94,10 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
   });
 }
 
-// =========
-// Regions
-// =========
-
-const baseSpotURL = baseApiURL + `regions/`
-
-const baseRegionsURL = baseSpotURL + `regions/`
-
-export const regionsRequest = async (userData, quantity, callBackFunction) => {
+export const addTrainingRequest = async (userData, quantity, callBackFunction) => {
   const config = {
-    method: 'get',
-    url: `${baseRegionsURL}${quantity.page}/${quantity.number}`,
+    method: 'post',
+    url: `${baseTrainingsURL}${quantity.page}/${quantity.number}`,
     headers: { 
       'Authorization': `Bearer ${userData.token}`
     }
@@ -118,5 +110,54 @@ export const regionsRequest = async (userData, quantity, callBackFunction) => {
   .catch(function (error) {
     console.log(error);
   });
-  
+}
+
+// =========
+// Regions
+// =========
+
+const baseSpotURL = baseApiURL + `regions/`
+
+const baseRegionsURL = baseSpotURL + `regions/`
+export const regionsRequest = async (userData, quantity, callBackFunction) => {
+  const config = {
+    method: 'get',
+    url: `${baseRegionsURL}${quantity.page}/${quantity.number}`,
+    headers: { 
+      'Authorization': `Bearer ${userData.token}`
+    }
+  };
+
+  axios(config)
+  .then(function (response) {
+    if(response.data === "")
+      callBackFunction([]);
+    else
+      callBackFunction(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+const baseRoutesURL = baseSpotURL + `routes/`
+export const routesByPlaceRequest = async (userData, placeId, callBackFunction) => {
+  const config = {
+    method: 'get',
+    url: `${baseRoutesURL}${placeId}`,
+    headers: { 
+      'Authorization': `Bearer ${userData.token}`
+    }
+  };
+
+  axios(config)
+  .then(function (response) {
+    if(response.data === "")
+      callBackFunction([]);
+    else
+      callBackFunction(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }

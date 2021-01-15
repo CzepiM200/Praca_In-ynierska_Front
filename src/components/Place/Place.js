@@ -64,15 +64,15 @@ const Place = (props) => {
                 <h3>Dodawanie regionów</h3>
                 <div className="place__window_form-item">
                     <label>Nazwa regionu: </label>
-                    <input type="text"/>
+                    <input type="text" className="form-control"/>
                 </div>
                 <button className="btn btn-secondary" type="submit">Dodaj region</button>
             </form>
-            <form className="place__window_form-place" style={{height: "13em"}}>
+            <form className="place__window_form-place">
                 <h3>Dodawanie miejsc</h3>
                 <div className="place__window_form-item">
                     <label>Nazwa miejsca: </label>
-                    <input type="text"/>
+                    <input type="text" className="form-control"/>
                 </div>
                 <div className="place__window_form-item">
                     <label>Region: </label>
