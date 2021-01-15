@@ -214,3 +214,8 @@ select.form-control:focus::-ms-value {
   display: block;
   width: 100%;
 }
+
+// [type="number"]::-webkit-inner-spin-button,
+// [type="number"]::-webkit-outer-spin-button {
+//   height: auto;
+// }

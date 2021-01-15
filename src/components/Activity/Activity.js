@@ -13,6 +13,8 @@ const Activity = (props) => {
   const [placesList, setPlacesList] = useState([]);
   const [routesList, setRoutesList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({region: -1, place: -1, route: -1});
+  const [enteredText, setEnteredText] = useState({name: "", distance: "", note: "", startDate: "", startTime: "", endDate: "", endTime: ""});
+  const [errors, setErrors] = useState({regions: false, time: false, wrongTime: false});
   let history = useHistory();
 
   const setActivityListItems = () => {
@@ -62,7 +64,6 @@ const Activity = (props) => {
 
   const onPlacesSelect = (e) => {
     setSelectedOptions({...selectedOptions, place: Number(e.target.value)});
-    // REQUEST
     routesByPlaceRequest(user, e.target.value, setRoutesList);
   }
 
@@ -106,7 +107,42 @@ const Activity = (props) => {
       setSelectedOptions({...selectedOptions, route: Number(routesList[0].routeId)});
     }
   }, [routesList]);
+
+  useEffect(() => {
+    const tempErrors = {regions: false, time: false, wrongTime: false};
+
+    const startDate = enteredText.startDate
+    const startTime = enteredText.startTime
+    const endDate = enteredText.endDate
+    const endTime = enteredText.endTime
+
+    if(startDate === "" || startTime === "" || endDate === "" || endTime === "") {
+      tempErrors.time = true
+      tempErrors.wrongTime = false
+    }
+    else {
+      let tempStartDate = new Date(Date.parse(`${startDate}`));
+      tempStartDate.setHours(startTime.slice(0, 2));
+      tempStartDate.setMinutes(startTime.slice(3, 5));
+
+      let tempEndDate = new Date(Date.parse(`${endDate}`));
+      tempEndDate.setHours(endTime.slice(0, 2));
+      tempEndDate.setMinutes(endTime.slice(3, 5));
+      if(tempEndDate <= tempStartDate){
+        tempErrors.wrongTime = true
+        tempErrors.time = false
+      }
+    }
+
+    if(selectedOptions.route === -1) 
+      tempErrors.regions = true
+    else 
+      tempErrors.regions = false
+ 
+    setErrors(tempErrors)
+  }, [enteredText, selectedOptions]);
   
+  //console.log(enteredText);
   return (
     <section className="activity">
       <Header user={user}/>
@@ -132,15 +168,15 @@ const Activity = (props) => {
               <div className="activity__window_form-left">
               <div className="activity__window_form-item">
                     <label>Nazwa treningu: </label>
-                    <input type="text" className="form-control"/>
+                    <input type="text" className="form-control" onChange={(e) => setEnteredText({...enteredText, name: e.target.value})}/>
                 </div>
                 {/* <div className="activity__window_form-item">
                     <label>Czas treningu: </label>
                     <input type="time" className="form-control"/>
                 </div> */}
                 <div className="activity__window_form-item">
-                    <label>Dystans: </label>
-                    <input type="text" className="form-control"/>
+                    <label>Dystans [m]: </label>
+                    <input type="number" min="0" max="99999" className="form-control" onChange={(e) => setEnteredText({...enteredText, distance: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                   <label>Region: </label>
@@ -177,36 +213,44 @@ const Activity = (props) => {
                 </div>
                 <div className="activity__window_form-item">
                   <label >Notatka: </label>
-                  <textarea className="form-control" maxLength="150"/>
+                  <textarea className="form-control" maxLength="150" onChange={(e) => setEnteredText({...enteredText, note: e.target.value})}/>
                 </div>
               </div>
 
               <div className="activity__window_form-right">
                 <div className="activity__window_form-item">
                     <label>Data rozpoczęcia: </label>
-                    <input type="date" className="form-control"/>
+                    <input type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, startDate: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Godzina rozpoczęcia: </label>
-                    <input type="time" className="form-control"/>
+                    <input type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, startTime: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Data zakończenia: </label>
-                    <input type="date" className="form-control"/>
+                    <input type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, endDate: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Godzina zakończenia: </label>
-                    <input type="time" className="form-control"/>
+                    <input type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, endTime: e.target.value})}/>
                 </div>
                 <button 
-                  disabled={selectedOptions.route === -1}
+                  disabled={errors.regions || errors.time || errors.wrongTime}
                   style={{width: "9em"}} 
                   className="btn btn-secondary" 
                   type="submit">
-                  Dodaj trening
+                  Dodaj trening 
                 </button>
+                <div className="activity__window_form-errors">
+                    <ul style={{color: "#d32f2f"}}>
+                      {/* <li>Brak nazwy</li> */}
+                      <li style={!errors.regions ? {display: "none"} : null}>Brak wybranego regionu, trasy lub drogi</li>
+                      <li style={!errors.time ? {display: "none"} : null}>Brak czasu rozpoczęcia lub zakończenia treningu</li>
+                      <li style={!errors.wrongTime ? {display: "none"} : null}>Czas zakończenia treningu nie może wypadać przed jego rozpoczęciem</li>
+                    </ul>
+                </div>
               </div>
-            </form>
+            </form> 
         </article>
       </Route>  
     </section>

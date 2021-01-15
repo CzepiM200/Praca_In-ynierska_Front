@@ -94,10 +94,21 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
   });
 }
 
-export const addTrainingRequest = async (userData, quantity, callBackFunction) => {
+// {
+//   "trainingType": 1,
+//   "trainingName": "Fajny x2",
+//   "trainingDescription": "powt",
+//   "startTime": "2020-12-12 14:30:00",
+//   "endTime": "2020-12-12 15:30:00",
+//   "activityTime": 1950,
+//   "distance": 10405,
+//   "routeId": 1
+// }
+
+export const addTrainingRequest = async (userData, data, callBackFunction) => {
   const config = {
     method: 'post',
-    url: `${baseTrainingsURL}${quantity.page}/${quantity.number}`,
+    url: `${baseTrainingsURL}/add`,
     headers: { 
       'Authorization': `Bearer ${userData.token}`
     }

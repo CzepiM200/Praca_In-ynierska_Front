@@ -130,6 +130,14 @@
         align-self: flex-end;
       }
     }
+    &_form-errors ul {
+      display: flex;
+      flex-direction: column;
+      li {
+        text-align: start;
+        margin-bottom: 0.25em;
+      }
+    }
 
     &_form-left,
     &_form-right {
