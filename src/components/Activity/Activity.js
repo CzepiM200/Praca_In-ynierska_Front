@@ -1,5 +1,5 @@
 import "./_activity.scss";
-import { trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest } from "../../helpers/ApiRequests"
+import { editTrainingRequest, trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest } from "../../helpers/ApiRequests"
 import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
@@ -9,6 +9,7 @@ import Header from "../Header/Header";
 const Activity = (props) => {
   const { user } = props;
   const [idAdding, setIfAdding] = useState(true);
+  const [trainingId, setTrainingId] = useState(0);
   const [firstLoad, setFirstLoad] = useState(false);
   const [acitivityList, setAcitivityList] = useState([]);
   const [regionsList, setRegionList] = useState([]);
@@ -40,6 +41,7 @@ const Activity = (props) => {
     setRegionList([])
     setPlacesList([])
     setRoutesList([{routeId: item.route.routeId, routeName: item.route.routeName}])
+    setTrainingId(item.trainingId)
     setEnteredText({
       name: item.trainingName, 
       distance: item.distance, 
@@ -56,6 +58,7 @@ const Activity = (props) => {
     setEnteredText({name: "", distance: "", note: "", startDate: "", startTime: "", endDate: "", endTime: ""});
     setSelectedOptions({region: -1, place: -1, route: -1});
     setFirstLoad(false)
+    setTrainingId(-1)
   }
 
   const setActivityListItems = () => {
@@ -121,16 +124,29 @@ const Activity = (props) => {
     const distance = enteredText.distance === "" ? 0 : enteredText.distance
     const name = enteredText.name === "" ? `Wycieczka ${enteredText.startDate} o godzinie ${enteredText.startTime}` : enteredText.name
     const note = enteredText.note === "" ? "Brak dodatkowego opisu..." : enteredText.note
+    let data;
 
-    let data = {
-      trainingName: name,
-      trainingDescription: note,
-      startTime: `${enteredText.startDate} ${enteredText.startTime}:00`,
-      endTime: `${enteredText.endDate} ${enteredText.endTime}:00`,
-      activityTime: Number(GetTimeDifferenceInMinutes(enteredText.startDate, enteredText.startTime, enteredText.endDate, enteredText.endTime)),
-      distance: Number(distance),
-      routeId: Number(selectedOptions.route),
-    }
+    if(idAdding)
+      data = {
+        trainingName: name,
+        trainingDescription: note,
+        startTime: `${enteredText.startDate} ${enteredText.startTime}:00`,
+        endTime: `${enteredText.endDate} ${enteredText.endTime}:00`,
+        activityTime: Number(GetTimeDifferenceInMinutes(enteredText.startDate, enteredText.startTime, enteredText.endDate, enteredText.endTime)),
+        distance: Number(distance),
+        routeId: Number(selectedOptions.route),
+      }
+    else 
+      data = {
+        trainingName: name,
+        trainingDescription: note,
+        startTime: `${enteredText.startDate} ${enteredText.startTime}:00`,
+        endTime: `${enteredText.endDate} ${enteredText.endTime}:00`,
+        activityTime: Number(GetTimeDifferenceInMinutes(enteredText.startDate, enteredText.startTime, enteredText.endDate, enteredText.endTime)),
+        distance: Number(distance),
+        trainingId: trainingId
+      }
+
 
     const seccessCallBack = (status) => {
       if(!status) {
@@ -141,7 +157,10 @@ const Activity = (props) => {
       else
         setRequestStatus(status)
     }
-    addTrainingRequest(user, data, seccessCallBack)
+    if(idAdding)
+      addTrainingRequest(user, data, seccessCallBack)
+    else 
+      editTrainingRequest(user, data, seccessCallBack)
   }
 
   
