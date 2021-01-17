@@ -1,5 +1,5 @@
 import "./_activity.scss";
-import { trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest } from "../../helpers/ApiRequests"
+import { trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest } from "../../helpers/ApiRequests"
 import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
@@ -19,11 +19,34 @@ const Activity = (props) => {
   const [requestStatus, setRequestStatus] = useState(false);
   let history = useHistory();
   
+  const refreshTrainingsList = () => {
+    trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
+  }
+
+  const onDelete = (id) => {
+    if (window.confirm("Czy na pewno chcesz usunąć wybrany trening?")) {
+      const callBack = (status) => {
+        status ? alert("Usunięto pomyślnie.") : alert("Coś poszło nie tak!")
+        refreshTrainingsList()
+      }
+      deleteTrainingRequest(user, {id: id}, callBack);
+    } 
+  }
+
+  const onEdit = (item) => {
+    history.push('activity/add')
+    console.log(item);
+  }
+
   const setActivityListItems = () => {
     return acitivityList.map((item, index) => 
         <div className="activity__window_item" key={index}>
             <div className="activity__window_item-top">
-            <p><span>Nazwa:</span> {item.trainingName}</p>
+              <p>{item.trainingName}</p>
+              <div className="activity__window_controll-buttons">
+                <p className="btn btn-secondary" onClick={() => onEdit(item)}>Edytuj</p>
+                <p className="btn btn-secondary" onClick={(e) => onDelete(item.trainingId)}>Usuń</p>
+              </div>
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_item-bottom">
@@ -101,9 +124,7 @@ const Activity = (props) => {
     addTrainingRequest(user, data, seccessCallBack)
   }
 
-  const refreshTrainingsList = () => {
-    trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
-  }
+  
 
   useEffect(() => {
     if (user.id === -1)
@@ -151,7 +172,7 @@ const Activity = (props) => {
     }
     else {
       const tempStartDate = GetFullDate(startDate, startTime)
-      const  tempEndDate = GetFullDate(endDate, endTime)
+      const tempEndDate = GetFullDate(endDate, endTime)
 
       if(tempEndDate <= tempStartDate){
         tempErrors.wrongTime = true

@@ -76,6 +76,7 @@ export const googleLoginRequest = async (authorizeData, callBackFunction) => {
 
 const baseTrainingsURL = baseApiURL + `activities/`
 const addTrainingsURL = baseTrainingsURL + `add`
+const deleteTrainingsURL = baseTrainingsURL + `remove`
 
 export const trainingsRequest = async (userData, quantity, callBackFunction) => {
   const config = {
@@ -94,18 +95,6 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
     console.log(error);
   });
 }
-
-// {
-  //   "trainingType": 1,
-//   "trainingName": "Fajny x2",
-//   "trainingDescription": "powt",
-//   "startTime": "2020-12-12 14:30:00",
-//   "endTime": "2020-12-12 15:30:00",
-//   "activityTime": 1950,
-//   "distance": 10405,
-//   "routeId": 1
-// }
-
 
 export const addTrainingRequest = async (userData, trainingData, callBackFunction) => {
   const config = {
@@ -127,6 +116,25 @@ export const addTrainingRequest = async (userData, trainingData, callBackFunctio
   });
 }
 
+export const deleteTrainingRequest = async (userData, trainingId, callBackFunction) => {
+  const config = {
+    method: 'delete',
+    url: deleteTrainingsURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data : JSON.stringify(trainingId)
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunction(true);
+  })
+  .catch(function (error) {
+    callBackFunction(false);
+  });
+}
 // =========
 // Regions
 // =========
