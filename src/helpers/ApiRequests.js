@@ -75,6 +75,7 @@ export const googleLoginRequest = async (authorizeData, callBackFunction) => {
 
 
 const baseTrainingsURL = baseApiURL + `activities/`
+const addTrainingsURL = baseTrainingsURL + `add`
 
 export const trainingsRequest = async (userData, quantity, callBackFunction) => {
   const config = {
@@ -95,7 +96,7 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
 }
 
 // {
-//   "trainingType": 1,
+  //   "trainingType": 1,
 //   "trainingName": "Fajny x2",
 //   "trainingDescription": "powt",
 //   "startTime": "2020-12-12 14:30:00",
@@ -105,21 +106,24 @@ export const trainingsRequest = async (userData, quantity, callBackFunction) => 
 //   "routeId": 1
 // }
 
-export const addTrainingRequest = async (userData, data, callBackFunction) => {
+
+export const addTrainingRequest = async (userData, trainingData, callBackFunction) => {
   const config = {
     method: 'post',
-    url: `${baseTrainingsURL}/add`,
+    url: addTrainingsURL,
     headers: { 
+      'Content-Type': 'application/json',
       'Authorization': `Bearer ${userData.token}`
-    }
+    },
+    data : JSON.stringify(trainingData)
   };
 
   axios(config)
   .then(function (response) {
-    callBackFunction(response.data);
+    callBackFunction(false);
   })
   .catch(function (error) {
-    console.log(error);
+    callBackFunction(true);
   });
 }
 

@@ -1,5 +1,6 @@
 import "./_activity.scss";
-import { trainingsRequest, regionsRequest, routesByPlaceRequest } from "../../helpers/ApiRequests"
+import { trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest } from "../../helpers/ApiRequests"
+import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
 import { Link, Route, useHistory } from "react-router-dom";
@@ -15,8 +16,9 @@ const Activity = (props) => {
   const [selectedOptions, setSelectedOptions] = useState({region: -1, place: -1, route: -1});
   const [enteredText, setEnteredText] = useState({name: "", distance: "", note: "", startDate: "", startTime: "", endDate: "", endTime: ""});
   const [errors, setErrors] = useState({regions: false, time: false, wrongTime: false});
+  const [requestStatus, setRequestStatus] = useState(false);
   let history = useHistory();
-
+  
   const setActivityListItems = () => {
     return acitivityList.map((item, index) => 
         <div className="activity__window_item" key={index}>
@@ -73,14 +75,41 @@ const Activity = (props) => {
 
   const onAdd = (e) => {
     e.preventDefault();
-    console.log(e);
+    const distance = enteredText.distance === "" ? 0 : enteredText.distance
+    const name = enteredText.name === "" ? `Wycieczka ${enteredText.startDate} o godzinie ${enteredText.startTime}` : enteredText.name
+    const note = enteredText.note === "" ? "Brak dodatkowego opisu..." : enteredText.note
+
+    let data = {
+      trainingName: name,
+      trainingDescription: note,
+      startTime: `${enteredText.startDate} ${enteredText.startTime}:00`,
+      endTime: `${enteredText.endDate} ${enteredText.endTime}:00`,
+      activityTime: Number(GetTimeDifferenceInMinutes(enteredText.startDate, enteredText.startTime, enteredText.endDate, enteredText.endTime)),
+      distance: Number(distance),
+      routeId: Number(selectedOptions.route),
+    }
+
+    const seccessCallBack = (status) => {
+      if(!status) {
+        setRequestStatus(status)
+        refreshTrainingsList()
+        history.push('/activity');
+      }
+      else
+        setRequestStatus(status)
+    }
+    addTrainingRequest(user, data, seccessCallBack)
+  }
+
+  const refreshTrainingsList = () => {
+    trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
   }
 
   useEffect(() => {
     if (user.id === -1)
       history.push("/login")
     else if(!firstLoad) {
-      trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
+      refreshTrainingsList()
       regionsRequest(user, {page: 1, number: 100}, setRegionList)
       setFirstLoad(true)
     }
@@ -121,13 +150,9 @@ const Activity = (props) => {
       tempErrors.wrongTime = false
     }
     else {
-      let tempStartDate = new Date(Date.parse(`${startDate}`));
-      tempStartDate.setHours(startTime.slice(0, 2));
-      tempStartDate.setMinutes(startTime.slice(3, 5));
+      const tempStartDate = GetFullDate(startDate, startTime)
+      const  tempEndDate = GetFullDate(endDate, endTime)
 
-      let tempEndDate = new Date(Date.parse(`${endDate}`));
-      tempEndDate.setHours(endTime.slice(0, 2));
-      tempEndDate.setMinutes(endTime.slice(3, 5));
       if(tempEndDate <= tempStartDate){
         tempErrors.wrongTime = true
         tempErrors.time = false
@@ -142,7 +167,6 @@ const Activity = (props) => {
     setErrors(tempErrors)
   }, [enteredText, selectedOptions]);
   
-  //console.log(enteredText);
   return (
     <section className="activity">
       <Header user={user}/>
@@ -170,10 +194,6 @@ const Activity = (props) => {
                     <label>Nazwa treningu: </label>
                     <input type="text" className="form-control" onChange={(e) => setEnteredText({...enteredText, name: e.target.value})}/>
                 </div>
-                {/* <div className="activity__window_form-item">
-                    <label>Czas treningu: </label>
-                    <input type="time" className="form-control"/>
-                </div> */}
                 <div className="activity__window_form-item">
                     <label>Dystans [m]: </label>
                     <input type="number" min="0" max="99999" className="form-control" onChange={(e) => setEnteredText({...enteredText, distance: e.target.value})}/>
@@ -247,6 +267,7 @@ const Activity = (props) => {
                       <li style={!errors.regions ? {display: "none"} : null}>Brak wybranego regionu, trasy lub drogi</li>
                       <li style={!errors.time ? {display: "none"} : null}>Brak czasu rozpoczęcia lub zakończenia treningu</li>
                       <li style={!errors.wrongTime ? {display: "none"} : null}>Czas zakończenia treningu nie może wypadać przed jego rozpoczęciem</li>
+                      <li style={!requestStatus ? {display: "none"} : null}>Wystąpił błąd serwera w trakcie dodawania treningu</li>
                     </ul>
                 </div>
               </div>
