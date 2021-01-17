@@ -3,11 +3,12 @@ import { trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequ
 import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
-import { Link, Route, useHistory } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Activity = (props) => {
   const { user } = props;
+  const [idAdding, setIfAdding] = useState(true);
   const [firstLoad, setFirstLoad] = useState(false);
   const [acitivityList, setAcitivityList] = useState([]);
   const [regionsList, setRegionList] = useState([]);
@@ -35,7 +36,26 @@ const Activity = (props) => {
 
   const onEdit = (item) => {
     history.push('activity/add')
-    console.log(item);
+    setIfAdding(false)
+    setRegionList([])
+    setPlacesList([])
+    setRoutesList([{routeId: item.route.routeId, routeName: item.route.routeName}])
+    setEnteredText({
+      name: item.trainingName, 
+      distance: item.distance, 
+      note: item.trainingDescription, 
+      startDate: item.startTime.slice(0, 10), 
+      startTime: item.startTime.slice(11, 16), 
+      endDate: item.endTime.slice(0, 10), 
+      endTime: item.endTime.slice(11, 16)})
+    setSelectedOptions({region: -1, place: item.route.placeId, route: item.route.routeId})
+    console.log(item)
+  }
+
+  const clearForm = () => {
+    setEnteredText({name: "", distance: "", note: "", startDate: "", startTime: "", endDate: "", endTime: ""});
+    setSelectedOptions({region: -1, place: -1, route: -1});
+    setFirstLoad(false)
   }
 
   const setActivityListItems = () => {
@@ -195,33 +215,32 @@ const Activity = (props) => {
         <article className="activity__window">
             <div className="activity__window_top">
                 <h2>Lista aktywności</h2>
-                <Link to="/activity/add">
-                    <p>Dodaj</p>
-                </Link>
+                <p className="btn btn-secondary" onClick={(e) => {setIfAdding(true); clearForm(); history.push('/activity/add')}}>Dodaj</p>
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_items">
+                {!firstLoad ? "Ładowanie..." : null}
                 {setActivityListItems()}
             </div>
         </article>
       </Route> 
       <Route exact path="/activity/add">
         <article className="activity__window">
-            <h2>Dodaj aktywność</h2>
+            <h2>{idAdding ? "Dodaj aktywność" : "Edytowanie aktywności"}</h2>
             <div className="activity__window_line"></div>
             <form onSubmit={onAdd}>
               <div className="activity__window_form-left">
               <div className="activity__window_form-item">
                     <label>Nazwa treningu: </label>
-                    <input type="text" className="form-control" onChange={(e) => setEnteredText({...enteredText, name: e.target.value})}/>
+                    <input value={enteredText.name} type="text" className="form-control" onChange={(e) => setEnteredText({...enteredText, name: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Dystans [m]: </label>
-                    <input type="number" min="0" max="99999" className="form-control" onChange={(e) => setEnteredText({...enteredText, distance: e.target.value})}/>
+                    <input value={enteredText.distance} type="number" min="0" max="99999" className="form-control" onChange={(e) => setEnteredText({...enteredText, distance: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                   <label>Region: </label>
-                  <select disabled={regionsList.length <= 0} className="custom-select" onChange={onRegionSelect}>
+                  <select value={selectedOptions.region} disabled={regionsList.length <= 0 || !idAdding} className="custom-select" onChange={onRegionSelect}>
                     {regionsList.map((item, index) => {
                       if(index === 1)
                         return <option defaultValue value={item.regionId} key={index}>{item.regionName}</option>;
@@ -232,7 +251,7 @@ const Activity = (props) => {
                 </div>
                 <div className="activity__window_form-item">
                   <label>Miejsce: </label>
-                  <select disabled={selectedOptions.region === -1 || placesList.length === 0} className="custom-select" onChange={onPlacesSelect}>
+                  <select value={selectedOptions.place} disabled={selectedOptions.region === -1 || placesList.length === 0 || !idAdding} className="custom-select" onChange={onPlacesSelect}>
                     {placesList.map((item, index) => {
                       if(index === 1)
                         return <option defaultValue value={item.placeId} key={index}>{item.placeName}</option>;
@@ -243,7 +262,7 @@ const Activity = (props) => {
                 </div>
                 <div className="activity__window_form-item">
                   <label>Trasa: </label>
-                  <select disabled={selectedOptions.place === -1 || routesList.length === 0} className="custom-select" onChange={onRouteSelect}>
+                  <select value={selectedOptions.route} disabled={selectedOptions.place === -1 || routesList.length === 0 || !idAdding} className="custom-select" onChange={onRouteSelect}>
                     {routesList.map((item, index) => {
                       if(index === 1)
                         return <option defaultValue value={item.routeId} key={index}>{item.routeName}</option>;
@@ -254,37 +273,36 @@ const Activity = (props) => {
                 </div>
                 <div className="activity__window_form-item">
                   <label >Notatka: </label>
-                  <textarea className="form-control" maxLength="150" onChange={(e) => setEnteredText({...enteredText, note: e.target.value})}/>
+                  <textarea value={enteredText.note} className="form-control" maxLength="150" onChange={(e) => setEnteredText({...enteredText, note: e.target.value})}/>
                 </div>
               </div>
 
               <div className="activity__window_form-right">
                 <div className="activity__window_form-item">
                     <label>Data rozpoczęcia: </label>
-                    <input type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, startDate: e.target.value})}/>
+                    <input value={enteredText.startDate} type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, startDate: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Godzina rozpoczęcia: </label>
-                    <input type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, startTime: e.target.value})}/>
+                    <input value={enteredText.startTime} type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, startTime: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Data zakończenia: </label>
-                    <input type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, endDate: e.target.value})}/>
+                    <input value={enteredText.endDate} type="date" className="form-control" onChange={(e) => setEnteredText({...enteredText, endDate: e.target.value})}/>
                 </div>
                 <div className="activity__window_form-item">
                     <label>Godzina zakończenia: </label>
-                    <input type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, endTime: e.target.value})}/>
+                    <input value={enteredText.endTime} type="time" className="form-control" onChange={(e) => setEnteredText({...enteredText, endTime: e.target.value})}/>
                 </div>
                 <button 
                   disabled={errors.regions || errors.time || errors.wrongTime}
                   style={{width: "9em"}} 
                   className="btn btn-secondary" 
                   type="submit">
-                  Dodaj trening 
+                  {idAdding ? "Dodaj treningu" : "Edytuj trening"}
                 </button>
                 <div className="activity__window_form-errors">
                     <ul style={{color: "#d32f2f"}}>
-                      {/* <li>Brak nazwy</li> */}
                       <li style={!errors.regions ? {display: "none"} : null}>Brak wybranego regionu, trasy lub drogi</li>
                       <li style={!errors.time ? {display: "none"} : null}>Brak czasu rozpoczęcia lub zakończenia treningu</li>
                       <li style={!errors.wrongTime ? {display: "none"} : null}>Czas zakończenia treningu nie może wypadać przed jego rozpoczęciem</li>
