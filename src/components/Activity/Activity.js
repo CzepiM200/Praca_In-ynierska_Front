@@ -68,13 +68,13 @@ const Activity = (props) => {
               <p>{item.trainingName}</p>
               <div className="activity__window_controll-buttons">
                 <p className="btn btn-secondary" onClick={() => onEdit(item)}>Edytuj</p>
-                <p className="btn btn-secondary" onClick={(e) => onDelete(item.trainingId)}>Usuń</p>
+                <p className="btn btn-secondary" onClick={() => onDelete(item.trainingId)}>Usuń</p>
               </div>
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_item-bottom">
                 <div className="activity__window_item-left">
-                    <p><span>Czas:</span> {item.activityTime} s</p> 
+                    <p><span>Czas:</span> {item.activityTime} min</p> 
                     <p><span>Dystans:</span> {item.distance} m</p>
                     <p><span>Rozpoczęty:</span> {item.startTime}</p> 
                     <p><span>Zakończony:</span> {item.endTime}</p> 
@@ -162,8 +162,6 @@ const Activity = (props) => {
     else 
       editTrainingRequest(user, data, seccessCallBack)
   }
-
-  
 
   useEffect(() => {
     if (user.id === -1)

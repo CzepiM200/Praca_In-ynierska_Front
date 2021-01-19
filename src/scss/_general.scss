@@ -9,7 +9,6 @@
   padding-top: 8em;
   height: 100vh;
   width: 1350px;
-  //background-color: white;
 }
 
 .gb-1 {
@@ -17,4 +16,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+@mixin topRightAndBottomLeftRoundCorners($var) {
+  border-top-right-radius: $var;
+  border-bottom-left-radius: $var;
 }

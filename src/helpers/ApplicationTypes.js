@@ -43,6 +43,8 @@ export const realizationType = (id) => {
             return `W trakcie realizacji`;
         case 3:
             return `Nie zrealizowany`;
+        case 4:
+            return `Porażka`;
         default:
             return `Zły typ realizacji...`;
     }

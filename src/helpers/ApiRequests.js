@@ -161,8 +161,16 @@ export const deleteTrainingRequest = async (userData, trainingId, callBackFuncti
 // =========
 
 const baseSpotURL = baseApiURL + `regions/`
-
 const baseRegionsURL = baseSpotURL + `regions/`
+const baseRoutesURL = baseSpotURL + `routes/`
+const baseAllSimpleItemsURL = baseSpotURL + `all/`
+const addRegionURL = baseSpotURL + `regions/add`
+const addPlaceURL = baseSpotURL + `places/add`
+const addRouteURL = baseSpotURL + `routes/add`
+const deleteRegionURL = baseSpotURL + `regions/remove`
+const deletePlaceURL = baseSpotURL + `places/remove`
+const deleteRouteURL = baseSpotURL + `routes/remove`
+
 export const regionsRequest = async (userData, quantity, callBackFunction) => {
   const config = {
     method: 'get',
@@ -184,7 +192,6 @@ export const regionsRequest = async (userData, quantity, callBackFunction) => {
   });
 }
 
-const baseRoutesURL = baseSpotURL + `routes/`
 export const routesByPlaceRequest = async (userData, placeId, callBackFunction) => {
   const config = {
     method: 'get',
@@ -203,5 +210,154 @@ export const routesByPlaceRequest = async (userData, placeId, callBackFunction) 
   })
   .catch(function (error) {
     console.log(error);
+  });
+}
+
+export const allSimpleItemsRequest = async (userData, callBackFunction) => {
+  const config = {
+    method: 'get',
+    url: baseAllSimpleItemsURL,
+    headers: { 
+      'Authorization': `Bearer ${userData.token}`
+    }
+  };
+
+  axios(config)
+  .then(function (response) {
+    if(response.data === "")
+      callBackFunction({regions: [], places: [], routes: []});
+    else
+      callBackFunction(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+// Add new region
+export const addRegionRequest = async (userData, region, callBackFunctions) => {
+  const config = {
+    method: 'post',
+    url: addRegionURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(region)
+  };
+
+  axios(config)
+  .then(function (response) {
+    //console.log(response);
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    //console.log(error);
+    callBackFunctions.error(error)
+  });
+}
+
+// Add new place
+export const addPlaceRequest = async (userData, place, callBackFunctions) => {
+  const config = {
+    method: 'post',
+    url: addPlaceURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(place)
+  };
+  console.log(place);
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Add new route
+export const addRouteRequest = async (userData, route, callBackFunctions) => {
+  const config = {
+    method: 'post',
+    url: addRouteURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(route)
+  };
+  console.log(route);
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Delete region
+export const deleteRegionRequest = async (userData, regionId, callBackFunctions) => {
+  const config = {
+    method: 'delete',
+    url: deleteRegionURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(regionId)
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Delete place
+export const deletePlaceRequest = async (userData, placeId, callBackFunctions) => {
+  const config = {
+    method: 'delete',
+    url: deletePlaceURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(placeId)
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Delete route
+export const deleteRouteRequest = async (userData, routeId, callBackFunctions) => {
+  const config = {
+    method: 'delete',
+    url: deleteRouteURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(routeId)
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
   });
 }
