@@ -1,7 +1,7 @@
 import "./_place.scss";
 import { ReactComponent as Trash } from '../../images/svg/trash.svg';
 import { ReactComponent as Edit } from '../../images/svg/edit.svg';
-import { allSimpleItemsRequest, addRegionRequest, addPlaceRequest, addRouteRequest, deleteRouteRequest, deletePlaceRequest, deleteRegionRequest } from "../../helpers/ApiRequests"
+import { editRouteRequest, editPlaceRequest, editRegionRequest, getRouteDetailsById, getPlaceDetailsById, allSimpleItemsRequest, addRegionRequest, addPlaceRequest, addRouteRequest, deleteRouteRequest, deletePlaceRequest, deleteRegionRequest } from "../../helpers/ApiRequests"
 import { placeType, realizationType, rappelStanceType, routeType, scaleType } from "../../helpers/ApplicationTypes"
 import { findPlacesByRegionId, findRoutesByPlaceId } from "../../helpers/RegionsMethods"
 import React, { useState, useEffect } from "react";
@@ -11,6 +11,8 @@ import Header from "../Header/Header";
 const Place = (props) => {
   const { user } = props
   const [firstLoad, setFirstLoad] = useState(false) 
+  const [editMode, setEditMode] = useState({add: true, regions: false, places: false, routes: false}) 
+  const [editItemId, setEditItemId] = useState(-1) 
   const [itemList, setItemList] = useState({regions: [], places: [], routes: []})
   const [addRegionInput, setAddRegionInput] = useState({name: ""})
   const [addPlaceInput, setAddPlaceInput] = useState({name: "", lon: "", lat: "", type: 1, reg: -1})
@@ -57,75 +59,142 @@ const Place = (props) => {
 
   const onRegionsFormSubmit = (e) => {
     e.preventDefault()
-    const onAddCallBackFunctions =  { 
-      succes: (response) => {
-        history.push('/places');
-        refreshAllItems()
-        alert(`Pomyślnie dodano region: ${addRegionInput.name}`)
-      },
-      error: (response) => {
-        alert(`W trakcie dodawania nowego regionu, wystąpił problem: ${response.message}`)
+
+    if(editMode.add) {
+      const onAddCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie dodano region: ${addRegionInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie dodawania nowego regionu, wystąpił problem: ${response.message}`)
+        }
       }
+      const regionData = {
+        RegionName: addRegionInput.name
+      }
+      addRegionRequest(user, regionData, onAddCallBackFunctions)
     }
-    const regionData = {
-      RegionName: addRegionInput.name
+    else if(editMode.regions) {
+      const onEditCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie zmodyfikowano region: ${addRegionInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie modyfikacji regionu, wystąpił problem.`)
+        }
+      }
+      const regionData = {
+        RegionId: editItemId,
+        RegionName: addRegionInput.name
+      }
+      editRegionRequest(user, regionData, onEditCallBackFunctions)
     }
-    addRegionRequest(user, regionData, onAddCallBackFunctions)
   }
 
   const onPlaceFormSubmit = (e) => {
     e.preventDefault()
-    const onAddCallBackFunctions =  { 
-      succes: (response) => {
-        history.push('/places');
-        refreshAllItems()
-        alert(`Pomyślnie dodano miejsce: ${addPlaceInput.name}`)
-      },
-      error: (response) => {
-        alert(`W trakcie dodawania nowego miejsca, wystąpił problem: ${response.message}`)
+    if(editMode.add) {
+      const onAddCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie dodano miejsce: ${addPlaceInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie dodawania nowego miejsca, wystąpił problem: ${response.message}`)
+        }
       }
+      const placeData = {
+        placeName: addPlaceInput.name,
+        latitude: addPlaceInput.lat,
+        longitude: addPlaceInput.lon,
+        placeType: +addPlaceInput.type,
+        belongRegionId: +addPlaceInput.reg,
+      }
+      addPlaceRequest(user, placeData, onAddCallBackFunctions)
     }
-
-    const placeData = {
-      placeName: addPlaceInput.name,
-      latitude: addPlaceInput.lat,
-      longitude: addPlaceInput.lon,
-      placeType: +addPlaceInput.type,
-      belongRegionId: +addPlaceInput.reg,
+    else if(editMode.places) {
+      const onEditCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie zmodyfikowano miejsce: ${addPlaceInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie modyfikowania miejsca, wystąpił problem.`)
+        }
+      }
+      const placeData = {
+        placeId: editItemId,
+        placeName: addPlaceInput.name,
+        latitude: addPlaceInput.lat,
+        longitude: addPlaceInput.lon,
+        placeType: +addPlaceInput.type,
+        belongRegionId: +addPlaceInput.reg,
+      }
+      editPlaceRequest(user, placeData, onEditCallBackFunctions)
     }
-
-    addPlaceRequest(user, placeData, onAddCallBackFunctions)
   }
 
   const onRouteFormSubmit = (e) => {
     e.preventDefault()
-    const onAddCallBackFunctions =  { 
-      succes: (response) => {
-        history.push('/places');
-        refreshAllItems()
-        alert(`Pomyślnie dodano drogę: ${addPlaceInput.name}`)
-      },
-      error: (response) => {
-        alert(`W trakcie dodawania nowej drogi, wystąpił problem: ${response.message}`)
+    if(editMode.add) {
+      const onAddCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie dodano drogę: ${addPlaceInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie dodawania nowej drogi, wystąpił problem: ${response.message}`)
+        }
       }
+      const routeData = {
+        routeName: addRouteInput.name,
+        routeType: addRouteInput.type,
+        length: +addRouteInput.len,
+        heightDifference: +addRouteInput.heiDif,
+        accomplish: addRouteInput.status,
+        material: addRouteInput.mat,
+        scale: +addRouteInput.sca,
+        rating: addRouteInput.rat,
+        rings: addRouteInput.rin,
+        descentPosition: addRouteInput.rap,
+        belongPlaceId: addRouteInput.pla,
+      }
+      addRouteRequest(user, routeData, onAddCallBackFunctions)
     }
-
-    const routeData = {
-      routeName: addRouteInput.name,
-      routeType: addRouteInput.type,
-      length: +addRouteInput.len,
-      heightDifference: +addRouteInput.heiDif,
-      accomplish: addRouteInput.status,
-      material: addRouteInput.mat,
-      scale: +addRouteInput.sca,
-      rating: String(addRouteInput.rat),
-      rings: addRouteInput.rin,
-      descentPosition: addRouteInput.rap,
-      belongPlaceId: addRouteInput.pla,
+    else if(editMode.routes) {
+      const onEditCallBackFunctions =  { 
+        succes: (response) => {
+          history.push('/places');
+          refreshAllItems()
+          alert(`Pomyślnie zmodyfikowano drogę: ${addPlaceInput.name}`)
+        },
+        error: (response) => {
+          alert(`W trakcie modyfikacji drogi, wystąpił problem.`)
+        }
+      }
+      const routeData = {
+        routeId: editItemId,
+        routeName: addRouteInput.name,
+        routeType: addRouteInput.type,
+        length: +addRouteInput.len,
+        heightDifference: +addRouteInput.heiDif,
+        accomplish: addRouteInput.status,
+        material: addRouteInput.mat,
+        scale: +addRouteInput.sca,
+        rating: addRouteInput.rat,
+        rings: addRouteInput.rin,
+        descentPosition: addRouteInput.rap,
+        belongPlaceId: addRouteInput.pla,
+      }
+      editRouteRequest(user, routeData, onEditCallBackFunctions)
     }
-
-
-    addRouteRequest(user, routeData, onAddCallBackFunctions)
   }
 
   const onRegionDelete = (region) => {
@@ -181,6 +250,71 @@ const Place = (props) => {
     deleteRouteRequest(user, routeId, onDeleteCallBackFunctions)
   }
 
+  const onAddRegionPlaceOfRoute = () => {
+    setAddRegionInput({name: ""})
+    setAddPlaceInput({name: "", lon: "", lat: "", type: 1, reg: -1})
+    setAddRouteInput({name: "", len: "", heiDif: "", status: 1, mat: "", sca: 1, rat: "", rin: 0, type: 1, rap: 1, reg: -1, pla: -1, list: []})
+    setEditMode({add: true, regions: false, places: false, routes: false})
+    history.push('places/add')
+  }
+
+  const onRegionEdit = (region) => {
+    setAddPlaceInput({name: "", lon: "", lat: "", type: 1, reg: -1})
+    setAddRouteInput({name: "", len: "", heiDif: "", status: 1, mat: "", sca: 1, rat: "", rin: 0, type: 1, rap: 1, reg: -1, pla: -1, list: []})
+    setAddRegionInput({name: region.regionName})
+    setEditMode({add: false, regions: true, places: false, routes: false})
+    setEditItemId(region.regionId)
+    history.push('places/add')
+  }
+
+  const onPlaceEdit = (place) => {
+    const onGetDetailsCallBackFunctions =  { 
+      succes: (response) => {
+        const data = response.data;
+        setAddPlaceInput({name: data.placeName, lon: data.longitude, lat: data.latitude, type: data.placeType, reg: data.belongRegion.regionId})
+      },
+      error: (response) => {
+        alert(`W trakcie pobierania dodatkowych informacji na temat edytowanego miejsca wystąpił błąd.`) 
+      }
+    } 
+    setAddRegionInput({name: ""})
+    setAddRouteInput({name: "", len: "", heiDif: "", status: 1, mat: "", sca: 1, rat: "", rin: 0, type: 1, rap: 1, reg: -1, pla: -1, list: []})
+    getPlaceDetailsById(user, place.placeId, onGetDetailsCallBackFunctions)
+    setEditItemId(place.placeId)
+    setEditMode({add: false, regions: false, places: true, routes: false})
+    history.push('places/add')
+
+  }
+
+  const onRouteEdit = (route) => {
+    const onGetDetailsCallBackFunctions =  { 
+      succes: (response) => {
+        const data = response.data;
+        setAddRouteInput({name: data.routeName, len: data.length, heiDif: data.heightDifference, status: data.accomplish, mat: data.material, sca: data.scale, rat: data.rating, rin: data.rings, type: data.routeType, rap: data.descentPosition, reg: data.belongPlace.belongRegion.regionId, pla: data.belongPlace.placeId, list: findPlacesByRegionId(itemList.places, data.belongPlace.belongRegion.regionId)})
+      },
+      error: (response) => {
+        alert(`W trakcie pobierania dodatkowych informacji na temat edytowanego miejsca wystąpił błąd.`)
+      }
+    } 
+    setAddRegionInput({name: ""})
+    setAddPlaceInput({name: "", lon: "", lat: "", type: 1, reg: -1})
+    getRouteDetailsById(user, route.routeId, onGetDetailsCallBackFunctions)
+    setEditItemId(route.routeId)
+    setEditMode({add: false, regions: false, places: false, routes: true})
+    history.push('places/add')
+  }
+
+  const generateAddAndEditHeader = () => {
+    if(editMode.add)
+      return <h2>Dodaj miejsca i regiony</h2>
+    else if(editMode.regions)
+      return <h2>Edytuj region</h2>
+    else if(editMode.places)
+      return <h2>Edytuj miejsce</h2>
+    else if(editMode.routes)
+      return <h2>Edytuj trasę</h2>
+  }
+
   const generateRouteItem = (route, index) => {
 
     return (
@@ -188,15 +322,10 @@ const Place = (props) => {
         <div className="place__route_top">
           <p className="place__route_name">{route.routeName}</p>
           <div className="place__route_icons">
-            <div><Edit style={{ height: "1.4em", marginRight: "0.25em"}} /></div>
+            <div onClick={e => onRouteEdit(route)}><Edit style={{ height: "1.4em", marginRight: "0.25em"}} /></div>
             <div onClick={e => onRouteDelete(route)}><Trash style={{ height: "1.4em"}} /></div>
           </div>
         </div>
-        {/* <div className="place__window_line"></div> 
-        <div className="place__route_bottom">
-          <p>Andrzej</p>
-          <p>mACIEJ</p>
-        </div> */}
       </div> 
     );
   } 
@@ -208,7 +337,7 @@ const Place = (props) => {
         <div className="place__place_top"> 
           <p className="place__place_name">{place.placeName}</p>
           <div className="place__place_icons">
-            <div><Edit style={{ height: "1.4em", marginRight: "0.2em"}} /></div>
+            <div onClick={e => onPlaceEdit(place)}><Edit style={{ height: "1.4em", marginRight: "0.2em"}} /></div>
             <div onClick={e => onPlaceDelete(place)}><Trash style={{ height: "1.4em"}} /></div>
           </div>
         </div>
@@ -228,7 +357,7 @@ const Place = (props) => {
         <div className="place__region_top">
           <p className="place__region_name"><span>Region:</span> {region.regionName}</p>
           <div className="place__controll-buttons">
-            <p className="btn btn-secondary">Edytuj</p>
+            <p onClick={e => onRegionEdit(region)} className="btn btn-secondary">Edytuj</p>
             <p onClick={e => onRegionDelete(region)} className="btn btn-secondary">Usuń</p>
           </div>
         </div>
@@ -265,15 +394,13 @@ const Place = (props) => {
   }, [itemList])
 
   return (
-    <section className="place">
+    <section className="place"> 
       <Header user={user}/>
       <Route exact path="/places">
         <article className="place__window">
             <div className="place__window_top">
                 <h2>Lista miejsc</h2>
-                <Link to="/places/add">
-                    <p>Dodaj</p>
-                </Link>
+                <p onClick={e => {onAddRegionPlaceOfRoute()}} className="btn btn-secondary">Dodaj</p>
             </div>
             <div className="place__window_line"></div>
             <div className="place__window_items">
@@ -283,7 +410,7 @@ const Place = (props) => {
       </Route> 
       <Route exact path="/places/add">
         <article className="place__window">
-            <h2>Dodaj miejsca i regiony</h2>
+            {generateAddAndEditHeader()}
             <div className="place__window_line"></div>
             <div className="place__window_forms">
               <div className="place__window_left-forms">
@@ -293,7 +420,9 @@ const Place = (props) => {
                         <label>Nazwa regionu: </label>
                         <input onChange={e => setAddRegionInput({name: e.target.value})} value={addRegionInput.name} type="text" className="form-control"/>
                     </div>
-                    <button className="btn btn-secondary" type="submit">Dodaj region</button>
+                    <button className="btn btn-secondary" type="submit"  disabled={!editMode.regions && !editMode.add}>
+                      {editMode.add ? "Dodaj region" : "Edytuj region"}
+                    </button>
                 </form>
                 <form onSubmit={onPlaceFormSubmit} className="place__window_form-place">
                     <h3>Dodawanie miejsc</h3>
@@ -328,8 +457,8 @@ const Place = (props) => {
                         })}
                       </select>
                     </div>
-                    <button className="btn btn-secondary" type="submit">
-                      Dodaj miejsce
+                    <button className="btn btn-secondary" type="submit" disabled={!editMode.places && !editMode.add}>
+                      {editMode.add ? "Dodaj miejsce" : "Edytuj miejsce"}
                     </button>
                 </form>
               </div>
@@ -415,7 +544,9 @@ const Place = (props) => {
                         })}
                       </select>
                     </div>
-                    <button className="btn btn-secondary" type="submit">Dodaj region</button>
+                    <button className="btn btn-secondary" type="submit" disabled={!editMode.routes && !editMode.add}>
+                      {!editMode.routes ? "Dodaj trasę" : "Edytuj trasę"}
+                    </button>
                 </form>
                 </div>
               </div>

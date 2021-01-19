@@ -46,9 +46,9 @@ const Header = (props) => {
           <Link to="/activity">
             <div className="header__nav-item">Aktywności</div>
           </Link>
-          <Link to="/plans">
+          {/* <Link to="/plans">
             <div className="header__nav-item">Plany</div>
-          </Link>
+          </Link> */}
           <Link to="/places">
             <div className="header__nav-item">Miejsca</div>
           </Link>

@@ -57,8 +57,11 @@
       padding-bottom: 0.3em;
       display: flex;
       flex-direction: column;
-      background-color: $background-color-trans-3;
+      background-color: $background-color-trans-2;
       border-radius: 0.3em;
+      &:hover {
+        background-color: $background-color-trans-3;
+      }
     }
     &_item-top {
       display: flex;

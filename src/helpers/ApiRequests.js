@@ -167,10 +167,18 @@ const baseAllSimpleItemsURL = baseSpotURL + `all/`
 const addRegionURL = baseSpotURL + `regions/add`
 const addPlaceURL = baseSpotURL + `places/add`
 const addRouteURL = baseSpotURL + `routes/add`
+const editRegionURL = baseSpotURL + `regions/edit`
+const editPlaceURL = baseSpotURL + `places/edit`
+const editRouteURL = baseSpotURL + `routes/edit`
 const deleteRegionURL = baseSpotURL + `regions/remove`
 const deletePlaceURL = baseSpotURL + `places/remove`
 const deleteRouteURL = baseSpotURL + `routes/remove`
+const getRegionDetailsByIdURL = baseSpotURL + `regions/details`
+const getPlaceDetailsByIdURL = baseSpotURL + `places/details`
+const getRouteDetailsByIdURL = baseSpotURL + `routes/details`
 
+
+// Get list of regions with places belong to it
 export const regionsRequest = async (userData, quantity, callBackFunction) => {
   const config = {
     method: 'get',
@@ -192,6 +200,7 @@ export const regionsRequest = async (userData, quantity, callBackFunction) => {
   });
 }
 
+// Get routes belong to particular place 
 export const routesByPlaceRequest = async (userData, placeId, callBackFunction) => {
   const config = {
     method: 'get',
@@ -213,6 +222,7 @@ export const routesByPlaceRequest = async (userData, placeId, callBackFunction) 
   });
 }
 
+// Get list of regions, places and routes
 export const allSimpleItemsRequest = async (userData, callBackFunction) => {
   const config = {
     method: 'get',
@@ -353,6 +363,107 @@ export const deleteRouteRequest = async (userData, routeId, callBackFunctions) =
     data: JSON.stringify(routeId)
   };
 
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Get place details
+export const getPlaceDetailsById = async (userData, placeId, callBackFunctions) => {
+  const config = {
+    method: 'get',
+    url: `${getPlaceDetailsByIdURL}/${placeId}`,
+    headers: { 
+      'Authorization': `Bearer ${userData.token}`
+    }
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Get route details
+export const getRouteDetailsById = async (userData, routeId, callBackFunctions) => {
+  const config = {
+    method: 'get',
+    url: `${getRouteDetailsByIdURL}/${routeId}`,
+    headers: { 
+      'Authorization': `Bearer ${userData.token}`
+    }
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Edit region
+export const editRegionRequest = async (userData, region, callBackFunctions) => {
+  const config = {
+    method: 'put',
+    url: editRegionURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(region)
+  };
+
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Edit place
+export const editPlaceRequest = async (userData, place, callBackFunctions) => {
+  const config = {
+    method: 'put',
+    url: editPlaceURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(place)
+  };
+  console.log(place);
+  axios(config)
+  .then(function (response) {
+    callBackFunctions.succes(response)
+  })
+  .catch(function (error) {
+    callBackFunctions.error(error)
+  });
+}
+
+// Edit route
+export const editRouteRequest = async (userData, route, callBackFunctions) => {
+  const config = {
+    method: 'put',
+    url: editRouteURL,
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    },
+    data: JSON.stringify(route)
+  };
+  console.log(route);
   axios(config)
   .then(function (response) {
     callBackFunctions.succes(response)
