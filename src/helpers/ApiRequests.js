@@ -11,13 +11,27 @@ const baseUserURL = baseURL + `users/`
 const baseUserRegisterURL = baseUserURL + `register`
 const baseUserLoginURL = baseUserURL + `authenticate`
 
-export const registerRequest = async (callBackFunction, newUserData) => {
-    axios.post(baseUserRegisterURL, newUserData)
+export const registerRequest = async (newUserData, callBackFunction) => {
+  
+  console.log(baseUserRegisterURL);
+  console.log(newUserData);
+  console.log(JSON.stringify(newUserData));
+
+  const config = {
+    method: 'post',
+    url: `https://localhost:44374/users/register`,
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    data : JSON.stringify(newUserData)
+  };  
+  
+  axios(config)
     .then(resp => {
-        console.log(resp.data);
+      callBackFunction.success(resp)
     })
     .catch(error => {
-        console.log(error);
+      callBackFunction.error(error)
     });
 }
   
@@ -49,7 +63,6 @@ export const loginRequest = async (loginData, callBackFunction) => {
 const baseUserGoogleLoginURL = baseUserURL + `authenticate/google`
 
 export const googleLoginRequest = async (authorizeData, callBackFunction) => {
-  console.log(authorizeData);
   const config = {
     method: 'post',
     url: baseUserGoogleLoginURL,
