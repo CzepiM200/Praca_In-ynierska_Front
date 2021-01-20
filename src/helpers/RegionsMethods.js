@@ -17,3 +17,13 @@ export const findRoutesByPlaceId = (list, id) => {
         });
     return places;
 }
+
+export const findRegionByPlaceId = (list, id) => {
+    const places = [];
+    if(list.length > 0)
+        list.forEach((item) => {
+            if(item.regionId === id)
+                places.push(item)
+        });
+    return places;
+}
