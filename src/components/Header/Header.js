@@ -1,9 +1,15 @@
 import "./_header.scss";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Header = (props) => {
-  const { user } = props;
+  const { user, setUser } = props;
+  let history = useHistory();
+
+  const onLogout = () => {
+    setUser({id: -1});
+    history.push('login')
+  }
 
   const generateLoggedOutHeaderSection = () => {
     return (
@@ -26,7 +32,7 @@ const Header = (props) => {
         <Link to="/">
           <div className="header__login-item"><span>Witaj {user.firstName}!</span></div>
         </Link>{" "}
-        <Link to="/logout">
+        <Link onClick={e => {e.preventDefault(); onLogout()}} to="/">
           <div className="header__login-item signup-link">
             Wyloguj
           </div> 
