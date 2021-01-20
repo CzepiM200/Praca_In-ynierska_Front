@@ -1,5 +1,5 @@
 import "./_activity.scss";
-import { editTrainingRequest, trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest } from "../../helpers/ApiRequests"
+import { editTrainingRequest, trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest, allSimpleItemsRequest } from "../../helpers/ApiRequests"
 import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
@@ -7,7 +7,10 @@ import { Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Activity = (props) => {
-  const { user } = props;
+  const { user, setUser } = props;
+  const [filters, setFilters] = useState({place: -1, start: ""});
+  const [filteredActivities, setFilteredActivities] = useState([]);
+  const [itemList, setItemList] = useState({regions: [], places: [], routes: []})
   const [idAdding, setIfAdding] = useState(true);
   const [trainingId, setTrainingId] = useState(0);
   const [firstLoad, setFirstLoad] = useState(false);
@@ -21,6 +24,10 @@ const Activity = (props) => {
   const [requestStatus, setRequestStatus] = useState(false);
   let history = useHistory();
   
+  const refreshAllItems = () => {
+    allSimpleItemsRequest(user, setItemList)
+  }
+
   const refreshTrainingsList = () => {
     trainingsRequest(user, {page: 1, number: 10}, setAcitivityList)
   }
@@ -62,7 +69,7 @@ const Activity = (props) => {
   }
 
   const setActivityListItems = () => {
-    return acitivityList.map((item, index) => 
+    return filteredActivities.map((item, index) => 
         <div className="activity__window_item" key={index}>
             <div className="activity__window_item-top">
               <p>{item.trainingName}</p>
@@ -167,6 +174,7 @@ const Activity = (props) => {
     if (user.id === -1)
       history.push("/login")
     else if(!firstLoad) {
+      refreshAllItems()
       refreshTrainingsList()
       regionsRequest(user, {page: 1, number: 100}, setRegionList)
       setFirstLoad(true)
@@ -224,19 +232,45 @@ const Activity = (props) => {
  
     setErrors(tempErrors)
   }, [enteredText, selectedOptions]);
-  
+
+  useEffect(() => {
+    let tempFilteredActivities = acitivityList;
+    if(filters.place !== -1)
+      tempFilteredActivities = tempFilteredActivities.filter(act => act.route.placeId === filters.place)
+
+    if(filters.start !== "")
+      tempFilteredActivities = tempFilteredActivities.filter(act => act.startTime.slice(0, 10) === filters.start)
+
+    console.log(filters);
+    setFilteredActivities(tempFilteredActivities)
+  }, [filters]);
+
+  useEffect(() => {
+    if(acitivityList.length > 0) {
+      setFilteredActivities(acitivityList)
+    }
+  }, [acitivityList]);
+
   return (
     <section className="activity">
-      <Header user={user}/>
+      <Header user={user} setUser={setUser}/>
       <Route exact path="/activity">
         <article className="activity__window">
             <div className="activity__window_top">
                 <h2>Lista aktywności</h2>
-                <p className="btn btn-secondary" onClick={(e) => {setIfAdding(true); clearForm(); history.push('/activity/add')}}>Dodaj</p>
+                <div className="activity__window_controll">
+                  <input onChange={e => setFilters({...filters, start: e.target.value})} value={filters.start} type="date" className="form-control" />
+                  <select onChange={e => setFilters({...filters, place: +e.target.value})} value={filters.place} className="custom-select">
+                    <option defaultValue value={-1}>Wybierz miejsce...</option> 
+                    {itemList.places.map((item) => {
+                      return <option value={item.placeId}>{item.placeName}</option>
+                    })}
+                  </select>
+                  <p className="btn btn-secondary" onClick={(e) => {setIfAdding(true); clearForm(); history.push('/activity/add')}}>Dodaj</p>
+                </div>
             </div>
             <div className="activity__window_line"></div>
             <div className="activity__window_items">
-                {!firstLoad ? "Ładowanie..." : null}
                 {setActivityListItems()}
             </div>
         </article>
