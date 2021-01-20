@@ -7,6 +7,7 @@ import LogIn from "../LogIn/LogIn";
 import SignUp from "../SignUp/SignUp";
 import Activity from "../Activity/Activity";
 import Place from "../Place/Place";
+import Strava from "../Strava/Strava";
 
 const MainPage = (props) => {
     const {  user, setUser } = props;
@@ -15,19 +16,22 @@ const MainPage = (props) => {
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
-              <HomePage  user={user} setUser={setUser}/>
+              <HomePage user={user} setUser={setUser}/>
             </Route>
             <Route path="/login">
-              <LogIn  user={user} setUser={setUser}/>
+              <LogIn user={user} setUser={setUser}/>
             </Route>
             <Route exact path="/signup">
               <SignUp user={user} setUser={setUser}/>
             </Route>
             <Route path="/activity">
-              <Activity  user={user} setUser={setUser}/>
+              <Activity user={user} setUser={setUser}/>
             </Route>
             <Route path="/places">
-              <Place  user={user} setUser={setUser}/>
+              <Place user={user} setUser={setUser}/>
+            </Route>
+            <Route path="/strava">
+              <Strava user={user} setUser={setUser}/>
             </Route>
           </Switch>
         </BrowserRouter> 
