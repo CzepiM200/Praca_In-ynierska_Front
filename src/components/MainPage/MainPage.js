@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Header from "../Header/Header";
 import HomePage from "../HomePage/HomePage";
 import LogIn from "../LogIn/LogIn";
+import SignUp from "../SignUp/SignUp";
 import Activity from "../Activity/Activity";
 import Place from "../Place/Place";
 
@@ -20,13 +21,10 @@ const MainPage = (props) => {
               <LogIn  user={user} setUser={setUser}/>
             </Route>
             <Route exact path="/signup">
-              {/* <Register />  user={user} setUser={setUser}*/}
-            </Route>
-            <Route exact path="/logout">
-              {/* <Register />  user={user} setUser={setUser}*/}
+              <SignUp user={user} setUser={setUser}/>
             </Route>
             <Route path="/activity">
-              <Activity  user={user}/>
+              <Activity  user={user} setUser={setUser}/>
             </Route>
             <Route path="/places">
               <Place  user={user} setUser={setUser}/>
