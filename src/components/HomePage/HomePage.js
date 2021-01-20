@@ -6,7 +6,7 @@ import Profile from "./Profile/Profile";
 import HomePageMenu from "./HomePageMenu/HomePageMenu";
 
 const HomePage = (props) => {
-  const { user } = props;
+  const { user, setUser } = props;
   let history = useHistory();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const HomePage = (props) => {
   
   return ( 
     <section className="home-page bg-1">
-        <Header user={user}/>
+        <Header user={user} setUser={setUser}/>
       {user.id !== -1 && <div className="container home-page__main">
         <Profile />
         <HomePageMenu />
