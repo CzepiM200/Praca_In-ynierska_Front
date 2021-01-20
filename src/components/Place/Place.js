@@ -9,7 +9,7 @@ import { Link, Route, useHistory } from "react-router-dom";
 import Header from "../Header/Header";
 
 const Place = (props) => {
-  const { user } = props
+  const { user, setUser } = props;
   const [firstLoad, setFirstLoad] = useState(false) 
   const [editMode, setEditMode] = useState({add: true, regions: false, places: false, routes: false}) 
   const [editItemId, setEditItemId] = useState(-1) 
@@ -33,7 +33,7 @@ const Place = (props) => {
       if(itemList.places.length > 0) {
         const places = findPlacesByRegionId(itemList.places, itemList.regions[0].regionId)
         if(places.length > 0) {
-          setAddRouteInput({...addRouteInput, reg: itemList.regions[0].regionId, list: places})
+          setAddRouteInput({...addRouteInput, reg: itemList.regions[0].regionId, list: places, pla: places[0].placeId})
         }
         else {
           setAddRouteInput({...addRouteInput, reg: itemList.regions[0].regionId, list: []})
@@ -98,6 +98,7 @@ const Place = (props) => {
   const onPlaceFormSubmit = (e) => {
     e.preventDefault()
     if(editMode.add) {
+      console.log(addPlaceInput);
       const onAddCallBackFunctions =  { 
         succes: (response) => {
           history.push('/places');
@@ -271,6 +272,7 @@ const Place = (props) => {
     const onGetDetailsCallBackFunctions =  { 
       succes: (response) => {
         const data = response.data;
+        console.log(data);
         setAddPlaceInput({name: data.placeName, lon: data.longitude, lat: data.latitude, type: data.placeType, reg: data.belongRegion.regionId})
       },
       error: (response) => {
@@ -393,9 +395,18 @@ const Place = (props) => {
     setUpRouteAddingFrom()
   }, [itemList])
 
+  useEffect(() => {
+    if(editMode.add) {
+      setUpPlaceAddingFrom()
+      setUpRouteAddingFrom()
+    }
+  }, [editMode])
+
+
+
   return (
     <section className="place"> 
-      <Header user={user}/>
+      <Header user={user} setUser={setUser}/>
       <Route exact path="/places">
         <article className="place__window">
             <div className="place__window_top">
