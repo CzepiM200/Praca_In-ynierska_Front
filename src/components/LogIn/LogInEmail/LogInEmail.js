@@ -14,11 +14,20 @@ const LogInEmail = (props) => {
   //const [passwordValidation, setPasswordValidation] = useState(true);
 
   const handleLogin = async (event) => { 
+    const callBackFunctions = {
+      success: (res) => {
+        setUser(res.data)
+        history.push("/")
+      },
+      error: (res) => {
+        alert("W trakcie logowania wystąpił błąd. Sprawdź, czy hasło i login są poprawne")
+      }
+    }
     const loginData = {
       UserName: nick,
       Password: password,
     };
-    await loginRequest(loginData, setUser) && history.push("/")
+    await loginRequest(loginData, callBackFunctions)
   }
 
   useEffect(() => {

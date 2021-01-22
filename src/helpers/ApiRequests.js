@@ -35,7 +35,7 @@ export const registerRequest = async (newUserData, callBackFunction) => {
     });
 }
   
-export const loginRequest = async (loginData, callBackFunction) => {
+export const loginRequest = async (loginData, callBackFunctions) => {
     const config = {
       method: 'post',
       url: baseUserLoginURL,
@@ -47,12 +47,10 @@ export const loginRequest = async (loginData, callBackFunction) => {
     
     axios(config)
     .then(function (response) {
-      callBackFunction(response.data);
-      return true;
+      callBackFunctions.success(response)
     })
     .catch(function (error) {
-      console.log(error);
-      return false;
+      callBackFunctions.error(error)
     });
 }
 
