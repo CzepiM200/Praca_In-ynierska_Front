@@ -8,7 +8,7 @@ const Header = (props) => {
 
   const onLogout = () => {
     setUser({id: -1});
-    history.push('login')
+    history.push('/login')
   }
 
   const generateLoggedOutHeaderSection = () => {
@@ -52,9 +52,6 @@ const Header = (props) => {
           <Link to="/activity">
             <div className="header__nav-item">Aktywności</div>
           </Link>
-          {/* <Link to="/plans">
-            <div className="header__nav-item">Plany</div>
-          </Link> */}
           <Link to="/places">
             <div className="header__nav-item">Miejsca</div>
           </Link>

@@ -4,6 +4,8 @@ export const routeType = (id) => {
             return `Chodzenie`;
         case 2:
             return `Wspinaczka`;
+        case 3:
+            return `Bieganie`;
         default:
             return `Zły typ drogi!`;
     }

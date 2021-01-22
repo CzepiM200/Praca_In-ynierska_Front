@@ -1,6 +1,6 @@
 import "./_activity.scss";
 import { editTrainingRequest, trainingsRequest, regionsRequest, routesByPlaceRequest, addTrainingRequest, deleteTrainingRequest, allSimpleItemsRequest } from "../../helpers/ApiRequests"
-import { GetTimeDifferenceInMinutes, GetFullDate } from "../../helpers/DateAndTime"
+import { GetTimeDifferenceInMinutes, GetFullDate, ConvertSecToNormalTime } from "../../helpers/DateAndTime"
 import { trainingType, scaleType } from "../../helpers/ApplicationTypes"
 import React, { useState, useEffect } from "react";
 import { Route, useHistory } from "react-router-dom";
@@ -81,17 +81,17 @@ const Activity = (props) => {
             <div className="activity__window_line"></div>
             <div className="activity__window_item-bottom">
                 <div className="activity__window_item-left">
-                    <p><span>Czas:</span> {item.activityTime} min</p> 
+                    <p><span>Czas:</span> {ConvertSecToNormalTime(+item.activityTime)}</p> 
                     <p><span>Dystans:</span> {item.distance} m</p>
-                    <p><span>Rozpoczęty:</span> {item.startTime}</p> 
+                    <p><span>Rozpoczęty:</span> {item.startTime}</p>  
                     <p><span>Zakończony:</span> {item.endTime}</p> 
                 </div>
-                <div className="activity__window_item-right">
+                <div className="activity__window_item-right"> 
                     <p><span>Typ:</span> {trainingType(item.trainingType)}</p> 
                     <p><span>Trasa:</span> {item.route.routeName}</p>
                     <p><span>Skala:</span> {scaleType(item.route.scale)}</p>
                     <p><span>Wycena:</span> {item.route.rating}</p>
-                </div>
+                </div> 
             </div>      
             <div className="activity__window_line"></div>   
             <div className="activity__window_item-description">
@@ -241,7 +241,6 @@ const Activity = (props) => {
     if(filters.start !== "")
       tempFilteredActivities = tempFilteredActivities.filter(act => act.startTime.slice(0, 10) === filters.start)
 
-    console.log(filters);
     setFilteredActivities(tempFilteredActivities)
   }, [filters]);
 
