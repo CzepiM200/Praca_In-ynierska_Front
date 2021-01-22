@@ -58,7 +58,6 @@ const Activity = (props) => {
       endDate: item.endTime.slice(0, 10), 
       endTime: item.endTime.slice(11, 16)})
     setSelectedOptions({region: -1, place: item.route.placeId, route: item.route.routeId})
-    console.log(item)
   }
 
   const clearForm = () => {

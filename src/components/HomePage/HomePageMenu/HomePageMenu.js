@@ -29,11 +29,11 @@ const HomePageMenu = (props) => {
                 <p className="home-page-menu__item">Synchronizuj z STRAVA</p>
                 <Sync/>
             </Link> 
-            <Link to="/place/add">
+            <Link to="/places/add">
                 <p className="home-page-menu__item">Dodaj miejsce</p>
                 <Plan/>
             </Link> 
-            <Link to="/place"> 
+            <Link to="/places">  
                 <p className="home-page-menu__item">Przeglądaj miejsca</p>
                 <Clipboard/>
             </Link> 
