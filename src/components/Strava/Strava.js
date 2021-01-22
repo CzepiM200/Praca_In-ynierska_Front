@@ -212,7 +212,6 @@ const Strava = (props) => {
     
   }, [selectedPlace])
 
-  console.log(selectedRoute);
   return (
     <> 
       <Header user={user} setUser={setUser}/>

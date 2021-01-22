@@ -11,6 +11,7 @@ import { BrowserRouter, Switch, Route, Link  } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const HomePageMenu = (props) => {
+  const { user, setUser } = props;
 
   return (
     <>
@@ -21,23 +22,23 @@ const HomePageMenu = (props) => {
                 <Add/>
             </Link> 
             <Link to="/activity">
-                <p className="home-page-menu__item">Przegląd aktywności</p>
+                <p className="home-page-menu__item">Przeglądaj aktywności</p>
                 <List/>
             </Link> 
             <Link to="/strava">
                 <p className="home-page-menu__item">Synchronizuj z STRAVA</p>
                 <Sync/>
             </Link> 
-            <Link to="/plan/add">
-                <p className="home-page-menu__item">Zaplanuj</p>
+            <Link to="/place/add">
+                <p className="home-page-menu__item">Dodaj miejsce</p>
                 <Plan/>
             </Link> 
-            <Link to="/plan"> 
-                <p className="home-page-menu__item">Lista planów</p>
+            <Link to="/place"> 
+                <p className="home-page-menu__item">Przeglądaj miejsca</p>
                 <Clipboard/>
             </Link> 
-            <Link to="/plan/done">
-                <p className="home-page-menu__item">Zrealizowane plany</p>
+            <Link onClick={(e) => {e.preventDefault(); setUser({id: -1})}} to="/">
+                <p className="home-page-menu__item">Wyloguj</p>
                 <Check/>
             </Link> 
         </article>
